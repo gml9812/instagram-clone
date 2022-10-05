@@ -1,13 +1,79 @@
 {
+  "parserOptions": {
+    "project": ["tsconfig.json"]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "extends": [
+    "airbnb",
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "prettier",
+    "next/core-web-vitals"
+  ],
+  "plugins": ["eslint-plugin-import", "prettier"],
+  "rules": {
+    // React 컴포넌트를 무조건 arrow function 형태만 쓰도록 고정
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "arrow-function",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "react/jsx-filename-extension": [0],
+    "react/react-in-jsx-scope": [0],
+    "react/jsx-props-no-spreading": [0],
+    "import/prefer-default-export": [0],
+    "arrow-body-style": [0]
+  }
+}
+
+/*
+{
     "parser": "@typescript-eslint/parser",
     "plugins": ["@typescript-eslint"],
     "extends": [
-      "prettier",
-      "airbnb",
-      "airbnb/hooks",
-      "prettier/react",
       "plugin:@typescript-eslint/recommended",
-      "prettier/@typescript-eslint",
-      "plugin:prettier/recommended"
-    ]
+      "airbnb",
+      "airbnb-typescript",
+      "airbnb/hooks",
+      "plugin:prettier/recommended",
+      "prettier",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "next/core-web-vitals"
+    ],
+    "rules": {
+      "react/jsx-filename-extension": [1,
+        {
+          "extensions": [
+            ".tx",
+            ".tsx"
+          ]
+        }
+      ],
+      "react/function-component-definition" :[2, {"namedcomponents":"arrow-function", "unnamedComponents": "arrow-function"}],
+      "import/prefer-default-export": 0,
+      "react/jsx-props-no-spreading": 0,
+      "import/extensions": [
+        "error",
+        "ignorePackages",
+        {
+          "js": "never",
+          "jsx": "never",
+          "ts": "never",
+          "tsx": "never"
+        }
+     ]
+    },
+    "settings": {
+      "import/resolver": {
+        "typescript": {}
+      }
+    }
 }
+*/
