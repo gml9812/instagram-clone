@@ -1,12 +1,12 @@
 import { NextPage } from 'next';
-import { MouseEvent, ChangeEvent, useState, useRef } from 'react';
+import { ChangeEvent, useState, useRef } from 'react';
 import Logo from '@icons/Logo';
 import { Box, Container, IconButton, InputAdornment } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CancelIcon from '@mui/icons-material/Cancel';
-import Button from '@components/templates/Button';
-import Input from '@components/templates/Input';
+import Button from '@components/login/Button';
+import Input from '@components/login/Input';
 import COLOR from '@styles/colors';
 
 export interface LoginState {
@@ -46,17 +46,13 @@ const Login: NextPage = () => {
     passwordRef.current?.focus();
   };
 
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   return (
     <Container sx={{ width: '80%' }}>
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          margin: '40% 0 20%',
+          margin: '117px 0 50px',
         }}
       >
         <Logo />
@@ -108,18 +104,19 @@ const Login: NextPage = () => {
         label="이메일"
         value={values.email}
         size="small"
-        margin="0 0 12px"
+        sx={{ margin: '0 0 12px' }}
         handleChange={handleChange('email')}
         endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              onClick={() => handleClickDeleteValue('email')}
-              onMouseDown={handleMouseDownPassword}
-              edge="end"
-            >
-              {values.email ? <CancelIcon /> : undefined}
-            </IconButton>
-          </InputAdornment>
+          values.email ? (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => handleClickDeleteValue('email')}
+                edge="end"
+              >
+                <CancelIcon sx={{ color: COLOR.GREY.MAIN }} />
+              </IconButton>
+            </InputAdornment>
+          ) : undefined
         }
       />
 
@@ -129,23 +126,24 @@ const Login: NextPage = () => {
         label="비밀번호"
         value={values.password}
         size="small"
-        margin="none"
+        sx={undefined}
         handleChange={handleChange('password')}
         endAdornment={
-          <InputAdornment position="end" sx={{ gap: '2px' }}>
-            <IconButton
-              onClick={() => handleClickDeleteValue('password')}
-              onMouseDown={handleMouseDownPassword}
-              edge="end"
-            >
-              {values.password ? <CancelIcon /> : undefined}
-            </IconButton>
-            <IconButton
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-              edge="end"
-            >
-              {values.showPassword ? <VisibilityOff /> : <Visibility />}
+          <InputAdornment position="end" sx={{ gap: '4px' }}>
+            {values.password && (
+              <IconButton
+                onClick={() => handleClickDeleteValue('password')}
+                edge="end"
+              >
+                <CancelIcon sx={{ color: COLOR.GREY.MAIN }} />
+              </IconButton>
+            )}
+            <IconButton onClick={handleClickShowPassword} edge="end">
+              {values.showPassword ? (
+                <VisibilityOff sx={{ color: COLOR.GREY.MAIN }} />
+              ) : (
+                <Visibility sx={{ color: COLOR.GREY.MAIN }} />
+              )}
             </IconButton>
           </InputAdornment>
         }
@@ -155,6 +153,7 @@ const Login: NextPage = () => {
         label="로그인"
         disabled={!(values.email && values.password)}
         size="large"
+        sx={{ margin: '60px 0 0' }}
         handleClick={undefined}
       />
     </Container>

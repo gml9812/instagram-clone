@@ -1,10 +1,14 @@
 import React, { ReactElement } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {
+  createTheme,
+  SxProps,
+  Theme,
+  ThemeProvider,
+} from '@mui/material/styles';
 import { styled, Button as MuiButton, buttonClasses } from '@mui/material';
 import COLOR from '@styles/colors';
 
 const CssButton = styled(MuiButton)({
-  margin: '25% 0 0',
   width: '100%',
   background: COLOR.BLUE.MAIN,
   boxShadow: 'none',
@@ -42,6 +46,7 @@ interface Props {
   label: string;
   disabled: boolean;
   size: 'small' | 'medium' | 'large';
+  sx: SxProps<Theme> | undefined;
   handleClick: (() => void) | undefined;
 }
 
@@ -49,6 +54,7 @@ const Button = ({
   label,
   disabled,
   size,
+  sx,
   handleClick,
 }: Props): ReactElement => {
   return (
@@ -59,6 +65,7 @@ const Button = ({
         variant="contained"
         size={size}
         onClick={handleClick}
+        sx={{ ...sx }}
       >
         {label}
       </CssButton>

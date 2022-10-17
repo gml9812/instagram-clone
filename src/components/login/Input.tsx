@@ -1,5 +1,12 @@
 import React, { ChangeEvent, ReactElement, RefObject } from 'react';
-import { styled, OutlinedInput, InputLabel, FormControl } from '@mui/material';
+import {
+  styled,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+  SxProps,
+  Theme,
+} from '@mui/material';
 import COLOR from '@styles/colors';
 
 const CssFormControl = styled(FormControl)({
@@ -36,7 +43,7 @@ interface Props {
   label: string;
   value: string;
   size: 'small' | 'normal' | undefined;
-  margin: string | 'none';
+  sx: SxProps<Theme> | undefined;
   endAdornment: JSX.Element | undefined;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -47,15 +54,12 @@ const Input = ({
   label,
   value,
   size,
-  margin,
+  sx,
   handleChange,
   endAdornment,
 }: Props): ReactElement => {
   return (
-    <CssFormControl
-      variant="outlined"
-      sx={{ width: '100%', margin: { margin } }}
-    >
+    <CssFormControl variant="outlined" sx={{ width: '100%', ...sx }}>
       <InputLabel size={size}>{label}</InputLabel>
       <OutlinedInput
         inputRef={inputRef}
