@@ -13,7 +13,6 @@ pipeline {
             steps {
                 script {
                     sh 'printenv' // env 정보 출력, TRIGGER_URL 등 environment에 없는 변수들도 여기에 나옴
-                    // sh "curl --request PATCH \"${TRIGGER_URL}/start?repository=${APP_NAME}&tag=${BUILD_TAG}&commit=${GIT_COMMIT}&url=${BUILD_URL}\"" // ggumim-build-helper 사용
                     sh "npm install"
                     sh "npm run build"
                 }
@@ -29,8 +28,9 @@ pipeline {
                         sh "mv Procfile.prod Procfile"
                     else
                         sh "mv Procfile.stage Procfile"
-                    sh "zip -r ggumim-pc-next.zip .ebextensions .next .platform public package.json next.config.js Procfile .env.production .env.stage .env.development node_modules" // env 
                     */
+                    sh "zip -r ggumim-pc-next.zip .ebextensions .next .platform public package.json next.config.js Procfile .env.production .env.stage .env.development node_modules" 
+                    sh ls
                 }
             }
         }
@@ -63,14 +63,4 @@ pipeline {
         }
         
     }
-
-    /*
-    post { // 특정 stage 이전 또는 이후에 실행되는 condition block
-        unsuccessful { // stage 실패 시 실행
-            sh "curl --request PATCH \"${TRIGGER_URL}/fail?repository=${APP_NAME}&tag=${BUILD_TAG}&commit=${GIT_COMMIT}&url=${BUILD_URL}\"" // ggumim-build-helper 사용
-        }
-        success { // stage 성공 시 실행
-            sh "curl --request PATCH \"${TRIGGER_URL}/success?repository=${APP_NAME}&tag=${BUILD_TAG}&commit=${GIT_COMMIT}&url=${BUILD_URL}\"" // ggumim-build-helper 사용
-        }
-    } */
 }
