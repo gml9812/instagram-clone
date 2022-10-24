@@ -8,7 +8,7 @@ pipeline {
         //CURRENT_TIME = java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Seoul")))
     }
 
-    stages { // 각 stage에 할 동작들, stage는 정해진 것이 아니라 우리가 임의로 나눌 수 있다. 
+    stages {
         stage('Build') {
             steps {
                 script {
@@ -22,25 +22,27 @@ pipeline {
         stage('Zip') { // node_modules 및 빌드 결과물(.next 파일) 등을 .zip으로 압축해 소스 번들 만든다.
             steps {
                 script {
-                    sh "mv .ebextensions/package.json package.json"
+                    //sh "mv .ebextensions/package.json package.json"
                     /*
                     if (ENV_NAME == 'main')
                         sh "mv Procfile.prod Procfile"
                     else
                         sh "mv Procfile.stage Procfile"
                     */
-                    sh "zip -r instagram_front.zip .ebextensions .next node_modules package.json next.config.js" //.platform
+                    sh "zip -r instagram_front.zip .next node_modules package.json next.config.js" //.platform .ebextensions
                     sh "ls"
                 }
             }
         }
         
+        /*
         stage('Upload') { // s3에 소스 번들 파일 업로드
             steps {
                 //sh "aws s3 cp ${WORKSPACE}/${APP_NAME}.zip s3://deploy-app.ggumim.co.kr/${APP_NAME}/${env.BUILD_TAG}.zip --region ap-northeast-2"
                 echo 'upload'
             }
         }
+        */
 
         stage('Deploy') { // 배포
             steps {
