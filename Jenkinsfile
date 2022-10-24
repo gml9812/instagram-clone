@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment { // key-value 스타일로 파이프라인 내부에서 사용할 변수들 선언 가능
-        //APP_NAME = "ggumim-pc-next"
+        APP_NAME = "instagram_front"
         //ENV_NAME = "${env.BRANCH_NAME}"
         //CURRENT_TIME = java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Seoul")))
     }
