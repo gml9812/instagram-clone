@@ -22,15 +22,15 @@ pipeline {
         stage('Zip') { // node_modules 및 빌드 결과물(.next 파일) 등을 .zip으로 압축해 소스 번들 만든다.
             steps {
                 script {
-                    echo 'zip'
-                    /*sh "mv .ebextensions/package.json package.json"
+                    sh "mv .ebextensions/package.json package.json"
+                    /*
                     if (ENV_NAME == 'main')
                         sh "mv Procfile.prod Procfile"
                     else
                         sh "mv Procfile.stage Procfile"
                     */
-                    sh "zip -r ggumim-pc-next.zip .ebextensions .next .platform public package.json next.config.js Procfile .env.production .env.stage .env.development node_modules" 
-                    sh ls
+                    sh "zip -r instagram_front.zip .ebextensions .next node_modules package.json next.config.js" //.platform
+                    sh "ls"
                 }
             }
         }
