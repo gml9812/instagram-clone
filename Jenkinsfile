@@ -1,5 +1,6 @@
 pipeline {
     agent any
+    tools {nodejs "nodejs"}
 
     environment { // key-value 스타일로 파이프라인 내부에서 사용할 변수들 선언 가능
         APP_NAME = "instagram_front"
