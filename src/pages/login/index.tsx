@@ -11,7 +11,7 @@ import OutlinedInput from '@components/template/OutlinedInput';
 import COLOR from '@styles/colors';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION, Token } from 'src/queries/auth';
-import { CookiesKeys } from 'src/lib/values';
+import { CookiesName } from 'src/lib/values';
 import { parseCookies, setCookie } from 'nookies';
 
 export interface LoginState {
@@ -73,11 +73,17 @@ const Login: NextPage = () => {
   };
 
   useEffect(() => {
-    const backUrl = cookies[CookiesKeys.backUrl] || '/';
+    const backUrl = cookies[CookiesName.backUrl] || '/';
     if (data) {
       const { accessToken, refreshToken } = data.login;
-      setCookie(null, CookiesKeys.accessToken, accessToken);
-      setCookie(null, CookiesKeys.refreshToken, refreshToken);
+      setCookie(null, CookiesName.accessToken, accessToken, {
+        maxAge: 60 * 60,
+        path: '/',
+      });
+      setCookie(null, CookiesName.refreshToken, refreshToken, {
+        maxAge: 60 * 60 * 24 * 15,
+        path: '/',
+      });
       router.push(backUrl);
     }
   }, [cookies, data, router]);
