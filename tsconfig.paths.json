@@ -3,8 +3,10 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@apollo/*": ["src/apollo/*"],
       "@libs/*": ["src/libs/*"],
-      "@styles/*": ["src/styles/*"]
+      "@styles/*": ["src/styles/*"],
+      "@icons/*": ["src/icons/*"]
     }
   }
 }
