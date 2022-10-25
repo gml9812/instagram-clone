@@ -1,7 +1,7 @@
 import { createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { parseCookies } from 'nookies';
-import { CookiesKeys } from 'src/lib/values';
+import { CookiesName } from 'src/lib/values';
 // import { onError } from '@apollo/client/link/error';
 
 export const httpLink = createHttpLink({
@@ -10,7 +10,7 @@ export const httpLink = createHttpLink({
 
 export const authLink = setContext((_, { headers }) => {
   const cookies = parseCookies();
-  const accessToken = cookies[CookiesKeys.accessToken];
+  const accessToken = cookies[CookiesName.accessToken];
   return {
     headers: {
       ...headers,
