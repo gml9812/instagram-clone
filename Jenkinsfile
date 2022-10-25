@@ -23,8 +23,9 @@ pipeline {
             steps {
                 script {
                     sh "zip -r instagram_front.zip .next node_modules package.json next.config.js" 
-                    sh "ls"
-                    sh "mv instagram_front.zip /var/app/frontend/"
+                    sh "pwd" //test
+                    sh "ls -d"
+                    //sh "mv instagram_front.zip /var/app/frontend/"
                 }
             }
         }
@@ -40,7 +41,7 @@ pipeline {
                     }
                     */
                     
-                    echo 'deploy'
+                    sh "npm run start"
                 }
             }
         }
