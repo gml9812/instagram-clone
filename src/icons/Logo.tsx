@@ -1,15 +1,20 @@
 import type { ReactElement } from 'react';
 
-const Logo = (): ReactElement => {
+interface Props {
+  width: number;
+  height: number;
+}
+
+const Logo = ({ width, height }: Props): ReactElement => {
   return (
     <svg
       className="_ab6-"
       color="#262626"
       fill="#262626"
-      height="51"
+      width={width}
+      height={height}
       role="img"
       viewBox="32 4 113 32"
-      width="176"
     >
       <path
         clipRule="evenodd"

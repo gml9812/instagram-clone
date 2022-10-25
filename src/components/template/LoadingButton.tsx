@@ -5,11 +5,17 @@ import {
   Theme,
   ThemeProvider,
 } from '@mui/material/styles';
-import { styled, Button as MuiButton, buttonClasses } from '@mui/material';
+import {
+  styled,
+  Button as MuiButton,
+  buttonClasses,
+  CircularProgress,
+} from '@mui/material';
 import COLOR from '@styles/colors';
 
 const CssButton = styled(MuiButton)({
   width: '100%',
+  height: '40px',
   background: COLOR.BLUE.MAIN,
   boxShadow: 'none',
   border: 'none',
@@ -45,6 +51,7 @@ const theme = createTheme({
 interface Props {
   label: string;
   disabled: boolean;
+  loading: boolean;
   size: 'small' | 'medium' | 'large';
   sx: SxProps<Theme> | undefined;
   handleClick: (() => void) | undefined;
@@ -53,6 +60,7 @@ interface Props {
 const Button = ({
   label,
   disabled,
+  loading,
   size,
   sx,
   handleClick,
@@ -67,7 +75,7 @@ const Button = ({
         onClick={handleClick}
         sx={{ ...sx }}
       >
-        {label}
+        {loading ? <CircularProgress size={20} color="inherit" /> : label}
       </CssButton>
     </ThemeProvider>
   );

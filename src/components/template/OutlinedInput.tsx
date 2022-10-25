@@ -37,6 +37,14 @@ const CssFormControl = styled(FormControl)({
   },
 });
 
+const inputStyle = {
+  height: '43px',
+  padding: '0 0 0 14px',
+  WebkitBoxShadow: `0 0 0 1000px ${COLOR.LIGHTGREY} inset`,
+  fontSize: '1.5rem',
+  color: COLOR.CHARCOAL,
+};
+
 interface Props {
   inputRef: RefObject<HTMLInputElement> | null;
   type: 'email' | 'text' | 'password';
@@ -68,6 +76,10 @@ const Input = ({
         value={value}
         onChange={handleChange}
         endAdornment={endAdornment}
+        inputProps={{
+          style: inputStyle,
+          autoComplete: 'new-password',
+        }}
       />
     </CssFormControl>
   );
