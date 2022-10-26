@@ -8,6 +8,18 @@ pipeline {
         //CURRENT_TIME = java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Seoul")))
     }
 
+    stage('Move') { 
+            steps {
+                script {
+                    sh "mv * /var/app/frontend"
+                    sh "cd /var/app/frontend"
+                    sh "cd ~/var/app/frontend"
+                    sh "pwd" //test
+                    sh "ls"
+                }
+            }
+        }
+
     stages {
         stage('Build') {
             steps {
@@ -15,17 +27,6 @@ pipeline {
                     sh 'printenv' // env 정보 출력, TRIGGER_URL 등 environment에 없는 변수들도 여기에 나옴
                     sh "npm install"
                     sh "npm run build"
-                }
-            }
-        }
-
-        stage('Zip') { 
-            steps {
-                script {
-                    sh "zip -r instagram_front.zip .next node_modules package.json next.config.js" 
-                    sh "pwd" //test
-                    sh "ls -d"
-                    //sh "mv instagram_front.zip /var/app/frontend/"
                 }
             }
         }
