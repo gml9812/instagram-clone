@@ -8,7 +8,8 @@ pipeline {
         //CURRENT_TIME = java.time.format.DateTimeFormatter.ofPattern("yyyyMMddHHmmss").format(java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Seoul")))
     }
 
-    stage('Move') { 
+    stages {
+        stage('Move') { 
             steps {
                 script {
                     sh "mv * /var/app/frontend"
@@ -19,8 +20,7 @@ pipeline {
                 }
             }
         }
-
-    stages {
+        
         stage('Build') {
             steps {
                 script {
