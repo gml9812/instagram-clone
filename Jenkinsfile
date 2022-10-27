@@ -20,7 +20,7 @@ pipeline {
         stage('Deploy') { 
             steps {
                 script {
-                    sh "export BUILD_ID=dontKillMePlease"
+                    sh "JENKINS_NODE_COOKIE=dontKillMePlease"
                     sh "pm2 start npm --name instagram_clone_front -- start"
                 }
             }
