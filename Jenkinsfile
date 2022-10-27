@@ -13,6 +13,9 @@ pipeline {
                     sh 'printenv' 
                     sh "npm install"
                     sh "npm run build"
+                    sh "netstat -nap | grep 5000"
+                    sh "lsof -i TCP:5000"
+                    sh "fuser -k -n tcp 5000"
                 }
             }
         }
@@ -20,8 +23,9 @@ pipeline {
         stage('Deploy') { 
             steps {
                 script {
-                    sh "pm2 kill"
-                    sh "pm2 start npm --name instagram_clone_front -- start"
+                    sh "export BUILD_ID=dontKillMePlease"
+                    //sh "pm2 start npm --name instagram_clone_front -- start"
+                    sh "pm2 start startApp.sh"
                 }
             }
         }
