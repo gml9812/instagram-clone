@@ -21,8 +21,7 @@ pipeline {
             steps {
                 script {
                     sh "export BUILD_ID=dontKillMePlease"
-                    //sh "pm2 start npm --name instagram_clone_front -- start"
-                    sh "pm2 start startApp.sh"
+                    sh "pm2 start npm --name instagram_clone_front -- start"
                 }
             }
         }
