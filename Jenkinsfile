@@ -22,7 +22,7 @@ pipeline {
         stage('Deploy') { 
             steps {
                 script {
-                    sh "start.sh"
+                    sh "sh start.sh"
                 }
             }
         }
