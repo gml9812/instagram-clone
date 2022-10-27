@@ -13,8 +13,6 @@ pipeline {
                     sh 'printenv' 
                     sh "npm install"
                     sh "npm run build"
-                    sh "netstat -nap | grep 5000"
-                    sh "fuser -k -n tcp 5000"
                 }
             }
         }
