@@ -9,18 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Move') { 
-            steps {
-                script {
-                    sh "mv * /var/app/frontend"
-                    sh "cd /var/app/frontend"
-                    sh "cd ~/var/app/frontend"
-                    sh "pwd" //test
-                    sh "ls"
-                }
-            }
-        }
-        
         stage('Build') {
             steps {
                 script {
@@ -34,15 +22,7 @@ pipeline {
         stage('Deploy') { 
             steps {
                 script {
-                    /*def BUILD_NAME = "${CURRENT_TIME}_stage"
-                    def ENVIRONMENT = "${APP_NAME}-stg"
-                    if (ENV_NAME == 'main') {
-                        BUILD_NAME = "${CURRENT_TIME}_prod"
-                        ENVIRONMENT = "${APP_NAME}-prod"
-                    }
-                    */
-                    
-                    sh "npm run start"
+                    sh "start.sh"
                 }
             }
         }
