@@ -1,8 +1,7 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { parseCookies } from 'nookies';
-import { CookiesName } from 'src/lib/values';
-// import { onError } from '@apollo/client/link/error';
+import { CookiesName } from '@libs/values';
 
 export const httpLink = createHttpLink({
   uri: process.env.NEXT_PUBLIC_API_URL,
