@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     sh "JENKINS_NODE_COOKIE=dontKillMePlease"
-                    sh "pm2 start npm --name instagram_clone_front -- start"
+                    sh "pm2 startOrRestart run.sh"
                 }
             }
         }
