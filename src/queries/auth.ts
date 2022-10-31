@@ -13,3 +13,9 @@ export const LOGIN_MUTATION = gql`
     }
   }
 `;
+
+export const REFRESH_ATOKEN_MUTATION = gql`
+  mutation GetATokenByRToken {
+    getATokenByRToken
+  }
+`;
