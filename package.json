@@ -11,10 +11,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.8",
+    "@mui/material": "^5.10.11",
     "babel-preset-next": "^1.4.0",
     "graphql": "^16.6.0",
     "moment": "^2.29.4",
