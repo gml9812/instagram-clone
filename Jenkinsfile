@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    tools {nodejs "nodejs-16.18.0"}
+    tools {nodejs "nodejs-16.14.0"}
 
     environment { 
         APP_NAME = "instagram_front"
