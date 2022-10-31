@@ -13,7 +13,12 @@ import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION, Token } from 'src/queries/auth';
 import { CookiesName } from '@libs/values';
 import { parseCookies } from 'nookies';
-import { getAccessToken, setAccessToken, setRefreshToken } from '@libs/token';
+import {
+  getAccessToken,
+  getRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from '@libs/token';
 
 export interface LoginState {
   email: string;
@@ -230,7 +235,9 @@ export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const accessToken = getAccessToken(context);
-  if (accessToken) {
+  const refreshToken = getRefreshToken(context);
+
+  if (accessToken && refreshToken) {
     return {
       redirect: {
         destination: '/',
