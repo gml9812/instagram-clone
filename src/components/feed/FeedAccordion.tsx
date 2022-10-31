@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Menu, MenuItem, MenuProps, styled } from '@mui/material';
-import EditIcon from '@mui/icons-material/edit';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import COLOR from '@styles/colors';
