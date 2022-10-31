@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { GetServerSidePropsContext, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useState, useRef, useEffect } from 'react';
 import Logo from '@icons/Logo';
@@ -11,8 +11,14 @@ import OutlinedInput from '@components/template/OutlinedInput';
 import COLOR from '@styles/colors';
 import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION, Token } from 'src/queries/auth';
-import { CookiesName } from 'src/lib/values';
-import { parseCookies, setCookie } from 'nookies';
+import { CookiesName } from '@libs/values';
+import { parseCookies } from 'nookies';
+import {
+  getAccessToken,
+  getRefreshToken,
+  setAccessToken,
+  setRefreshToken,
+} from '@libs/token';
 
 export interface LoginState {
   email: string;
@@ -76,14 +82,8 @@ const Login: NextPage = () => {
     const backUrl = cookies[CookiesName.backUrl] || '/';
     if (data) {
       const { accessToken, refreshToken } = data.login;
-      setCookie(null, CookiesName.accessToken, accessToken, {
-        maxAge: 60 * 60,
-        path: '/',
-      });
-      setCookie(null, CookiesName.refreshToken, refreshToken, {
-        maxAge: 60 * 60 * 24 * 15,
-        path: '/',
-      });
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
       router.push(backUrl);
     }
   }, [cookies, data, router]);
@@ -230,3 +230,23 @@ const Login: NextPage = () => {
 };
 
 export default Login;
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const accessToken = getAccessToken(context);
+  const refreshToken = getRefreshToken(context);
+
+  if (accessToken && refreshToken) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

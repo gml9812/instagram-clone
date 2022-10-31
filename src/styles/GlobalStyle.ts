@@ -29,6 +29,9 @@ export const GlobalStyle = createGlobalStyle`
             fill: #f2f3f4;
         }
     }
+    li {
+        list-style: none
+    }
 
     .pc-tablet-only {
         display: block;

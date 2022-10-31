@@ -4,7 +4,6 @@ const COLOR = {
     SUB: '#C6DEFB',
   },
   RED: '#EA3037',
-  COLAR: '#DB565B',
   GREY: {
     MAIN: '#939494',
     SUB: '#DBDBDB',

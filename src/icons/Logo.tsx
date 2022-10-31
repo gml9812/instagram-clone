@@ -1,3 +1,4 @@
+import COLOR from '@styles/colors';
 import type { ReactElement } from 'react';
 
 interface Props {
@@ -9,8 +10,8 @@ const Logo = ({ width, height }: Props): ReactElement => {
   return (
     <svg
       className="_ab6-"
-      color="#262626"
-      fill="#262626"
+      color={COLOR.CHARCOAL}
+      fill={COLOR.CHARCOAL}
       width={width}
       height={height}
       role="img"
