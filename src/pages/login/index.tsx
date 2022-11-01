@@ -140,7 +140,7 @@ const Login: NextPage = () => {
         >
           <Box
             sx={{
-              fontSize: 13,
+              fontSize: '1.2rem',
               fontWeight: 600,
               color: COLOR.GREY.MAIN,
             }}
@@ -208,7 +208,7 @@ const Login: NextPage = () => {
             justifyContent: 'center',
             margin: '14px 0 26px',
             lineHeight: '20px',
-            fontSize: 13,
+            fontSize: '1.2rem',
             fontWeight: 400,
             color: COLOR.RED,
           }}
