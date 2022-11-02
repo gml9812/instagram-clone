@@ -3,10 +3,11 @@ import { Box } from '@mui/material';
 import { Post } from 'src/queries/post';
 import FeedHeader from './FeedHeader';
 import FeedImage from './FeedImage';
-import FeedText from './FeedText';
+import FeedContent from './FeedContent';
 import FeedIconActions from './FeedIconActions';
 
 const Feed = ({
+  id,
   user,
   description,
   medias,
@@ -14,19 +15,20 @@ const Feed = ({
   commentCount,
   isLike,
   isMine,
-  lastModifiedAt,
+  modifiedAt,
 }: Post): ReactElement => {
   return (
     <>
       <FeedHeader user={user} isMine={isMine} />
       <FeedImage imageList={medias} />
       <Box>
-        <FeedIconActions isLike={isLike} likeCount={likeCount} />
-        <FeedText
+        <FeedIconActions id={id} isLike={isLike} likeCount={likeCount} />
+        <FeedContent
+          id={id}
           nickname={user.nickname}
           description={description}
           commentCount={commentCount}
-          lastModifiedAt={lastModifiedAt}
+          modifiedAt={modifiedAt}
         />
       </Box>
     </>
