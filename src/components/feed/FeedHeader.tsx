@@ -4,7 +4,7 @@ import { Box, IconButton } from '@mui/material';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { User } from '@queries/auth';
 import TextButton from '@components/template/TextButton';
-import BorderProfileButton from '@components/template/BorderProfileButton';
+import ProfileButton from '@components/template/ProfileButton';
 import FeedAccordion from './FeedAccordion';
 
 interface Props {
@@ -40,7 +40,7 @@ const FeedHeader = ({ user, isMine }: Props): ReactElement => {
           padding: 0,
         }}
       >
-        <BorderProfileButton
+        <ProfileButton
           profileImage={user.profileImage}
           sx={{}}
           size={32}

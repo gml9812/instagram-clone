@@ -211,7 +211,6 @@ const Login: NextPage = () => {
             margin: '14px 0 26px',
             lineHeight: '20px',
             fontSize: '1.2rem',
-            fontWeight: 400,
             color: COLOR.RED,
           }}
         >

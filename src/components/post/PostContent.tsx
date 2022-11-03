@@ -1,5 +1,5 @@
 import HtmlText from '@components/feed/HtmlText';
-import BorderProfileButton from '@components/template/BorderProfileButton';
+import ProfileButton from '@components/template/ProfileButton';
 import { ago } from '@libs/moment';
 import { Box } from '@mui/material';
 import { User } from '@queries/auth';
@@ -26,7 +26,7 @@ const PostContent = ({ user, description, modifiedAt }: Props) => {
           alignItems: 'flex-start',
         }}
       >
-        <BorderProfileButton
+        <ProfileButton
           profileImage={user.profileImage}
           sx={{ margin: '0 2px 0 0' }}
           size={32}
@@ -46,7 +46,6 @@ const PostContent = ({ user, description, modifiedAt }: Props) => {
             sx={{
               display: 'flex',
               fontSize: '1rem',
-              fontWeight: 400,
               color: COLOR.GREY.MAIN,
               lineHeight: '18px',
             }}

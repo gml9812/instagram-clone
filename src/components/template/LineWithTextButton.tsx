@@ -24,7 +24,6 @@ const LineWithTextButton = ({ sx, buttonText, handleClick }: Props) => {
           minWidth: 'max-content',
           padding: '0 8px',
           fontSize: '1rem',
-          fontWeight: 400,
           height: '18px',
         }}
         onClick={handleClick}

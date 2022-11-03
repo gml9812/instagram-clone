@@ -32,7 +32,6 @@ const HtmlText = ({ sx, nickname, description, showAllDescription }: Props) => {
   const textStyles = showMoreButton
     ? {
         fontSize: '1.1rem',
-        fontWeight: 400,
         color: COLOR.CHARCOAL,
         overflow: 'hidden',
         textOverflow: 'clip',
@@ -41,7 +40,6 @@ const HtmlText = ({ sx, nickname, description, showAllDescription }: Props) => {
       }
     : {
         fontSize: '1.1rem',
-        fontWeight: 400,
         color: COLOR.CHARCOAL,
         lineHeight: '18px',
       };
@@ -68,7 +66,6 @@ const HtmlText = ({ sx, nickname, description, showAllDescription }: Props) => {
             padding: 0,
             minWidth: 'max-content',
             fontSize: '1.1rem',
-            fontWeight: 400,
             color: COLOR.GREY.MAIN,
             lineHeight: '18px',
             top: '-1px',
@@ -79,7 +76,6 @@ const HtmlText = ({ sx, nickname, description, showAllDescription }: Props) => {
             sx={{
               margin: '0 2px 0 0',
               fontSize: '1.1rem',
-              fontWeight: 400,
               color: COLOR.CHARCOAL,
               lineHeight: '16px',
               height: '16px',

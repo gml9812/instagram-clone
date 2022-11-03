@@ -43,7 +43,6 @@ const FeedText = ({
             padding: 0,
             margin: '0 16px',
             fontSize: '1.1rem',
-            fontWeight: 400,
             color: COLOR.GREY.MAIN,
             lineHeight: '18px',
           }}
@@ -57,7 +56,6 @@ const FeedText = ({
         sx={{
           padding: '3px 16px',
           fontSize: '1rem',
-          fontWeight: 400,
           color: COLOR.GREY.MAIN,
           lineHeight: '18px',
         }}
