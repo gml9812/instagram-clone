@@ -6,7 +6,7 @@ import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
-import { CREATE_LIKE } from '@queries/post';
+import { CREATE_LIKE, DELETE_LIKE } from '@queries/post';
 import { setAccessToken } from '@libs/token';
 import { parseCookies } from 'nookies';
 import { CookiesName } from '@libs/values';
@@ -41,12 +41,23 @@ const FeedIconActions = ({ id, isLike, likeCount }: Props) => {
   const [createLike] = useMutation<{ createLike: boolean }>(CREATE_LIKE, {
     variables: { likeInput: { itemId: id, type: 'POST' } },
   });
+  const [deleteLike] = useMutation<{ deleteLike: boolean }>(DELETE_LIKE, {
+    variables: { likeInput: { itemId: id, type: 'POST' } },
+  });
 
   const handleClickLike = async () => {
     if (!likeState.isLike) {
-      setLikeState({ isLike: true, count: likeCount + 1 });
+      setLikeState({ isLike: true, count: likeState.count + 1 });
       try {
         createLike();
+      } catch {
+        const result = await refreshAToken();
+        setAccessToken(result.data?.getATokenByRToken || '');
+      }
+    } else {
+      setLikeState({ isLike: false, count: likeState.count - 1 });
+      try {
+        deleteLike();
       } catch {
         const result = await refreshAToken();
         setAccessToken(result.data?.getATokenByRToken || '');
