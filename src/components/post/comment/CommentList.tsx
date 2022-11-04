@@ -1,28 +1,32 @@
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { parseCookies } from 'nookies';
+import { InView } from 'react-intersection-observer';
 import { useMutation, useQuery } from '@apollo/client';
+import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { setAccessToken } from '@libs/token';
 import { CookiesName } from '@libs/values';
 import { Box, CircularProgress, List } from '@mui/material';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import {
   DEFAULT_COMMENT_SIZE,
   GET_POST,
   PostWithComment,
   Comment,
+  NewComment,
+  CREATE_COMMENT,
+  CommentWithCount,
 } from '@queries/post';
 import COLOR from '@styles/colors';
-import { parseCookies } from 'nookies';
-import React, { useEffect, useState } from 'react';
-import { InView } from 'react-intersection-observer';
-import CommentContent from './CommentItem';
+import CommentInput from './CommentInput';
+import CommentItem from './CommentItem';
 
 interface Props {
   postId: number;
-  initialComments: Comment[];
-  handleClickReply: () => void;
+  initialComments: CommentWithCount[];
 }
 
-const CommentList = ({ postId, initialComments, handleClickReply }: Props) => {
+const CommentList = ({ postId, initialComments }: Props) => {
   const cookies = parseCookies();
+  const user = cookies[CookiesName.user];
   const refreshToken = cookies[CookiesName.refreshToken];
   const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
     REFRESH_ATOKEN_MUTATION,
@@ -35,7 +39,7 @@ const CommentList = ({ postId, initialComments, handleClickReply }: Props) => {
     },
   );
 
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [comments, setComments] = useState<CommentWithCount[]>(initialComments);
   const [lastId, setLastId] = useState<number>(
     initialComments[initialComments.length - 1]?.id || 0,
   );
@@ -85,17 +89,89 @@ const CommentList = ({ postId, initialComments, handleClickReply }: Props) => {
     }
   }, [isInView, data]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const focusInput = () => {
+    inputRef.current?.focus();
+  };
+  const [inputValue, setInputValue] = useState<string>('');
+  const resetValue = () => {
+    setInputValue('');
+  };
+  const handleChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const [newComments, setNewComments] = useState<NewComment[]>([]);
+  const [createComment] = useMutation<{ createComment: NewComment }>(
+    CREATE_COMMENT,
+  );
+
+  const [parentComment, setParentComment] = useState<Comment | null>(null);
+
+  const handleClickReply = (comment: Comment) => {
+    focusInput();
+    setParentComment(comment);
+    resetValue();
+  };
+  const handleClickCancelReply = () => {
+    focusInput();
+    setParentComment(null);
+    resetValue();
+  };
+
+  const handleClickSubmit = async () => {
+    if (inputValue !== '') {
+      try {
+        const result = await createComment({
+          variables: {
+            postId,
+            description: inputValue,
+          },
+        });
+        if (result.data) {
+          const newCommentData = result.data.createComment || [];
+          setNewComments(prev => [newCommentData, ...prev]);
+          resetValue();
+        }
+      } catch {
+        const result = await refreshAToken();
+        setAccessToken(result.data?.getATokenByRToken || '');
+      }
+    }
+  };
+
   return (
     <>
+      {user &&
+        newComments.length !== 0 &&
+        newComments.map(newComment => {
+          return (
+            <List
+              key={`comment-${newComment.id}`}
+              id={`comment-${newComment.id}`}
+              sx={{ padding: '8px' }}
+            >
+              <CommentItem
+                {...newComment}
+                user={JSON.parse(user)}
+                subCommentCount={0}
+                isLike={false}
+                isMine
+                handleClickReply={handleClickReply}
+              />
+            </List>
+          );
+        })}
+
       {comments.map(comment => {
         const { id } = comment;
         return (
           <List
             id={`comment-${id}`}
             key={`comment-${id}`}
-            sx={{ padding: '8px 0' }}
+            sx={{ padding: '8px' }}
           >
-            <CommentContent {...comment} handleClickReply={handleClickReply} />
+            <CommentItem {...comment} handleClickReply={handleClickReply} />
           </List>
         );
       })}
@@ -122,6 +198,15 @@ const CommentList = ({ postId, initialComments, handleClickReply }: Props) => {
           }}
         />
       )}
+
+      <CommentInput
+        inputRef={inputRef}
+        inputValue={inputValue}
+        parentComment={parentComment}
+        handleClickCancelReply={handleClickCancelReply}
+        handleChangeInput={handleChangeInput}
+        handleClickSubmit={handleClickSubmit}
+      />
     </>
   );
 };
