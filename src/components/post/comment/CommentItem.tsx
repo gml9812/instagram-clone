@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
-import { Comment, CREATE_LIKE } from '@queries/post';
+import {
+  Comment,
+  CREATE_LIKE,
+  CommentWithCount,
+  DELETE_LIKE,
+} from '@queries/post';
 import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { ago } from '@libs/moment';
 import LikeIcon from '@icons/LikeIcon';
-import BorderProfileButton from '@components/template/BorderProfileButton';
+import ProfileButton from '@components/template/ProfileButton';
 import HtmlText from '@components/feed/HtmlText';
 import { useMutation } from '@apollo/client';
 import { parseCookies } from 'nookies';
@@ -14,15 +19,15 @@ import { CookiesName } from '@libs/values';
 import { setAccessToken } from '@libs/token';
 import SubCommentList from './SubCommentList';
 
-interface Props extends Comment {
-  handleClickReply: () => void;
+interface Props extends CommentWithCount {
+  handleClickReply: (comment: Comment) => void;
 }
 
 const CommentItem = ({
-  id,
+  id: commentId,
   user,
   description,
-  subCommentCount,
+  subCommentCount = 0,
   createdAt,
   isLike: initialLike,
   isMine,
@@ -43,7 +48,10 @@ const CommentItem = ({
 
   const [isLike, setIsLike] = useState<boolean>(initialLike);
   const [createLike] = useMutation<{ createLike: boolean }>(CREATE_LIKE, {
-    variables: { likeInput: { itemId: id, type: 'COMMENT' } },
+    variables: { likeInput: { itemId: commentId, type: 'COMMENT' } },
+  });
+  const [deleteLike] = useMutation<{ deleteLike: boolean }>(DELETE_LIKE, {
+    variables: { likeInput: { itemId: commentId, type: 'COMMENT' } },
   });
 
   const handleClickLike = async () => {
@@ -55,7 +63,24 @@ const CommentItem = ({
         const result = await refreshAToken();
         setAccessToken(result.data?.getATokenByRToken || '');
       }
+    } else {
+      setIsLike(false);
+      try {
+        deleteLike();
+      } catch {
+        const result = await refreshAToken();
+        setAccessToken(result.data?.getATokenByRToken || '');
+      }
     }
+  };
+
+  const comment = {
+    id: commentId,
+    user,
+    description,
+    createdAt,
+    isLike: initialLike,
+    isMine,
   };
 
   return (
@@ -72,7 +97,7 @@ const CommentItem = ({
             alignItems: 'flex-start',
           }}
         >
-          <BorderProfileButton
+          <ProfileButton
             profileImage={user.profileImage}
             sx={{ margin: '0 2px 0 0' }}
             size={32}
@@ -92,7 +117,6 @@ const CommentItem = ({
               sx={{
                 display: 'flex',
                 fontSize: '1rem',
-                fontWeight: 400,
                 color: COLOR.GREY.MAIN,
                 lineHeight: '18px',
               }}
@@ -105,10 +129,9 @@ const CommentItem = ({
                   margin: '-1px 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',
-                  fontWeight: 400,
                   height: '18px',
                 }}
-                onClick={handleClickReply}
+                onClick={() => handleClickReply(comment)}
               >
                 답글 달기
               </TextButton>
@@ -120,7 +143,6 @@ const CommentItem = ({
                     margin: '-1px 0 0 18px',
                     padding: 0,
                     fontSize: '1rem',
-                    fontWeight: 400,
                     height: '18px',
                   }}
                 >
@@ -145,7 +167,7 @@ const CommentItem = ({
 
       {!!subCommentCount && (
         <SubCommentList
-          commentId={id}
+          commentId={commentId}
           count={subCommentCount}
           handleClickReply={handleClickReply}
         />
