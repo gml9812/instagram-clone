@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import LineWithTextButton from '@components/template/LineWithTextButton';
 import { useQuery } from '@apollo/client';
-import {
-  DEFAULT_SUBCOMMENT_SIZE,
-  GET_COMMENTS,
-  SubComment,
-} from '@queries/post';
+import { DEFAULT_SUBCOMMENT_SIZE, GET_COMMENTS, Comment } from '@queries/post';
 import { Box, List } from '@mui/material';
 import SubCommentItem from './SubCommentItem';
 
 interface Props {
   commentId: number;
   count: number;
-  handleClickReply: () => void;
+  handleClickReply: (comment: Comment) => void;
 }
 
 const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
   const [isShowSubComments, setIsShowSubComment] = useState<boolean>(false);
-  const { fetchMore, data } = useQuery<{ getSubComments: SubComment[] }>(
+  const { fetchMore, data } = useQuery<{ getSubComments: Comment[] }>(
     GET_COMMENTS,
     {
       variables: {
@@ -28,7 +24,7 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
       },
     },
   );
-  const [subComments, setSubComments] = useState<SubComment[]>([]);
+  const [subComments, setSubComments] = useState<Comment[]>([]);
   const [lastId, setLastId] = useState<number>(0);
   const [isEndData, setIsEndData] = useState<boolean>(false);
 
@@ -37,7 +33,7 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
   };
 
   useEffect(() => {
-    const subCommentsData: SubComment[] = data?.getSubComments || [];
+    const subCommentsData: Comment[] = data?.getSubComments || [];
     setSubComments(subCommentsData);
     setLastId(subCommentsData[subCommentsData.length - 1]?.id || 0);
   }, [data]);
@@ -86,7 +82,7 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
               <List id={`subComment-${id}`} key={`subComment-${id}`}>
                 <SubCommentItem
                   {...subComment}
-                  handleClickReply={handleClickReply}
+                  handleClickReply={() => handleClickReply(subComment)}
                 />
               </List>
             );

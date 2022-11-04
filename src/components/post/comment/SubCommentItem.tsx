@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
-import { CREATE_LIKE, SubComment } from '@queries/post';
+import { CREATE_LIKE, Comment } from '@queries/post';
 import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { ago } from '@libs/moment';
 import LikeIcon from '@icons/LikeIcon';
-import BorderProfileButton from '@components/template/BorderProfileButton';
+import ProfileButton from '@components/template/ProfileButton';
 import HtmlText from '@components/feed/HtmlText';
 import { useMutation } from '@apollo/client';
 import { parseCookies } from 'nookies';
 import { CookiesName } from '@libs/values';
 import { setAccessToken } from '@libs/token';
 
-interface Props extends SubComment {
+interface Props extends Comment {
   handleClickReply: () => void;
 }
 
@@ -69,7 +69,7 @@ const SubCommentItem = ({
           alignItems: 'flex-start',
         }}
       >
-        <BorderProfileButton
+        <ProfileButton
           profileImage={user.profileImage}
           sx={{ margin: '0 2px 0 0' }}
           size={32}
@@ -89,7 +89,6 @@ const SubCommentItem = ({
             sx={{
               display: 'flex',
               fontSize: '1rem',
-              fontWeight: 400,
               color: COLOR.GREY.MAIN,
               lineHeight: '18px',
             }}
@@ -102,7 +101,6 @@ const SubCommentItem = ({
                 margin: '-1px 0 0 18px',
                 padding: 0,
                 fontSize: '1rem',
-                fontWeight: 400,
                 height: '18px',
               }}
               onClick={handleClickReply}
@@ -117,7 +115,6 @@ const SubCommentItem = ({
                   margin: '-1px 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',
-                  fontWeight: 400,
                   height: '18px',
                 }}
               >
