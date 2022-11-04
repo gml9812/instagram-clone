@@ -54,13 +54,16 @@ export interface Comment {
   user: User;
   description: string;
   createdAt: string;
-  subCommentCount: number;
   isLike: boolean;
   isMine: boolean;
 }
 
+export interface CommentWithCount extends Comment {
+  subCommentCount: number;
+}
+
 export interface PostWithComment extends Post {
-  comments: Comment[];
+  comments: CommentWithCount[];
 }
 
 export const GET_POST = gql`
@@ -91,15 +94,6 @@ export const GET_POST = gql`
   }
 `;
 
-export interface SubComment {
-  id: number;
-  user: User;
-  description: string;
-  createdAt: string;
-  isLike: boolean;
-  isMine: boolean;
-}
-
 export const GET_COMMENTS = gql`
   query getSubComments($id: ID!, $commentPaging: CommentPagingInput!) {
     getSubComments(id: $id, commentPaging: $commentPaging) {
@@ -112,6 +106,41 @@ export const GET_COMMENTS = gql`
       description
       isLike
       isMine
+      createdAt
+    }
+  }
+`;
+
+export interface NewComment {
+  id: number;
+  description: string;
+  createdAt: string;
+}
+
+export const CREATE_COMMENT = gql`
+  mutation createComment($postId: ID!, $description: String!) {
+    createComment(postId: $postId, description: $description) {
+      id
+      description
+      createdAt
+    }
+  }
+`;
+
+export const CREATE_SUBCOMMENT = gql`
+  mutation createSubComment(
+    $postId: ID!
+    $parentId: ID!
+    $description: String!
+  ) {
+    createSubComment(
+      postId: $postId
+      parentId: $parentId
+      description: $description
+    ) {
+      id
+      parentId
+      description
       createdAt
     }
   }
