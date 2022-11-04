@@ -1,17 +1,16 @@
+import React from 'react';
+import { GetServerSidePropsContext } from 'next';
 import { serverSideClient } from '@apollo/apolloClient';
-import CommentInput from '@components/post/comment/CommentInput';
-import DetailPageHeader from '@components/layout/DetailPageHeader';
+import { DEFAULT_COMMENT_SIZE, GET_POST, PostWithComment } from '@queries/post';
 import {
   getAccessToken,
   getRefreshToken,
   getUpdatedToken,
   setAccessToken,
 } from '@libs/token';
-import { Box } from '@mui/material';
-import { DEFAULT_COMMENT_SIZE, GET_POST, PostWithComment } from '@queries/post';
 import COLOR from '@styles/colors';
-import { GetServerSidePropsContext } from 'next';
-import React, { useRef } from 'react';
+import { Box } from '@mui/material';
+import DetailPageHeader from '@components/layout/DetailPageHeader';
 import CommentList from '@components/post/comment/CommentList';
 import PostContent from '@components/post/PostContent';
 
@@ -27,11 +26,6 @@ const PostPage = ({ updatedToken, initialData }: Props) => {
 
   const { id, user, description, modifiedAt, comments } = initialData;
 
-  const inputRef = useRef<HTMLInputElement>(null);
-  const handleClickReply = () => {
-    inputRef.current?.focus();
-  };
-
   return (
     <>
       <DetailPageHeader pageName="댓글" />
@@ -46,15 +40,7 @@ const PostPage = ({ updatedToken, initialData }: Props) => {
         />
       </Box>
 
-      <Box sx={{ padding: '0 8px' }}>
-        <CommentList
-          postId={id}
-          initialComments={comments}
-          handleClickReply={handleClickReply}
-        />
-      </Box>
-
-      <CommentInput inputRef={inputRef} />
+      <CommentList postId={id} initialComments={comments} />
     </>
   );
 };
