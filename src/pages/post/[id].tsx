@@ -61,28 +61,46 @@ export const getServerSideProps = async (
     };
   }
   let updatedToken: string = '';
-  if (!accessToken) {
-    const token = await getUpdatedToken(refreshToken);
-    updatedToken = token;
+  try {
+    if (!accessToken) {
+      const token = await getUpdatedToken(refreshToken);
+      updatedToken = token;
+    }
+  } catch {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
   }
 
-  const { data } = await serverSideClient.query({
-    query: GET_POST,
-    variables: {
-      id: context.query.id,
-      commentPaging: { size: DEFAULT_COMMENT_SIZE },
-    },
-    context: {
-      headers: {
-        'A-TOKEN': accessToken || updatedToken,
+  try {
+    const { data } = await serverSideClient.query({
+      query: GET_POST,
+      variables: {
+        id: context.query.id,
+        commentPaging: { size: DEFAULT_COMMENT_SIZE },
       },
-    },
-  });
+      context: {
+        headers: {
+          'A-TOKEN': accessToken || updatedToken,
+        },
+      },
+    });
 
-  return {
-    props: {
-      initialData: data.getPost,
-      updatedToken,
-    },
-  };
+    return {
+      props: {
+        initialData: data.getPost || [],
+        updatedToken,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        initialData: [],
+        updatedToken,
+      },
+    };
+  }
 };

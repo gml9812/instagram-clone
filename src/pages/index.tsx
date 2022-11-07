@@ -68,25 +68,43 @@ export const getServerSideProps = async (
   }
 
   let updatedToken: string = '';
-  if (!accessToken) {
-    const token = await getUpdatedToken(refreshToken);
-    updatedToken = token;
+  try {
+    if (!accessToken) {
+      const token = await getUpdatedToken(refreshToken);
+      updatedToken = token;
+    }
+  } catch {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
   }
 
-  const { data } = await serverSideClient.query({
-    query: GET_POSTS,
-    variables: { postPaging: { size: DEFAULT_POST_SIZE } },
-    context: {
-      headers: {
-        'A-TOKEN': accessToken || updatedToken,
+  try {
+    const { data } = await serverSideClient.query({
+      query: GET_POSTS,
+      variables: { postPaging: { size: DEFAULT_POST_SIZE } },
+      context: {
+        headers: {
+          'A-TOKEN': accessToken || updatedToken,
+        },
       },
-    },
-  });
+    });
 
-  return {
-    props: {
-      initialPosts: data.getPosts || [],
-      updatedToken,
-    },
-  };
+    return {
+      props: {
+        initialPosts: data.getPosts || [],
+        updatedToken,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        initialPosts: [],
+        updatedToken,
+      },
+    };
+  }
 };
