@@ -56,14 +56,11 @@ export interface Comment {
   createdAt: string;
   isLike: boolean;
   isMine: boolean;
-}
-
-export interface CommentWithCount extends Comment {
   subCommentCount: number;
 }
 
 export interface PostWithComment extends Post {
-  comments: CommentWithCount[];
+  comments: Comment[];
 }
 
 export const GET_POST = gql`
@@ -111,19 +108,26 @@ export const GET_COMMENTS = gql`
   }
 `;
 
-export interface NewComment {
-  id: number;
-  description: string;
-  createdAt: string;
-}
-
 export const CREATE_COMMENT = gql`
   mutation createComment($postId: ID!, $description: String!) {
     createComment(postId: $postId, description: $description) {
       id
+      user {
+        id
+        nickname
+        profileImage
+      }
       description
+      isLike
+      isMine
       createdAt
     }
+  }
+`;
+
+export const DELETE_COMMENT = gql`
+  mutation deleteComment($id: ID!) {
+    deleteComment(id: $id)
   }
 `;
 
@@ -139,8 +143,14 @@ export const CREATE_SUBCOMMENT = gql`
       description: $description
     ) {
       id
-      parentId
+      user {
+        id
+        nickname
+        profileImage
+      }
       description
+      isLike
+      isMine
       createdAt
     }
   }

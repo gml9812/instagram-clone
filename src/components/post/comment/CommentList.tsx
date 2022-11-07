@@ -11,9 +11,8 @@ import {
   GET_POST,
   PostWithComment,
   Comment,
-  NewComment,
   CREATE_COMMENT,
-  CommentWithCount,
+  DELETE_COMMENT,
 } from '@queries/post';
 import COLOR from '@styles/colors';
 import CommentInput from './CommentInput';
@@ -21,12 +20,11 @@ import CommentItem from './CommentItem';
 
 interface Props {
   postId: number;
-  initialComments: CommentWithCount[];
+  initialComments: Comment[];
 }
 
 const CommentList = ({ postId, initialComments }: Props) => {
   const cookies = parseCookies();
-  const user = cookies[CookiesName.user];
   const refreshToken = cookies[CookiesName.refreshToken];
   const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
     REFRESH_ATOKEN_MUTATION,
@@ -39,7 +37,7 @@ const CommentList = ({ postId, initialComments }: Props) => {
     },
   );
 
-  const [comments, setComments] = useState<CommentWithCount[]>(initialComments);
+  const [comments, setComments] = useState<Comment[]>(initialComments);
   const [lastId, setLastId] = useState<number>(
     initialComments[initialComments.length - 1]?.id || 0,
   );
@@ -101,13 +99,24 @@ const CommentList = ({ postId, initialComments }: Props) => {
     setInputValue(event.target.value);
   };
 
-  const [newComments, setNewComments] = useState<NewComment[]>([]);
-  const [createComment] = useMutation<{ createComment: NewComment }>(
+  const [createComment] = useMutation<{ createComment: Comment }>(
     CREATE_COMMENT,
   );
+  const [deleteComment] = useMutation(DELETE_COMMENT);
+  const handleClickDeleteComment = async (commentId: number) => {
+    try {
+      await deleteComment({ variables: { id: commentId } });
+      const updatedComments = comments.filter(
+        comment => comment.id !== commentId,
+      );
+      setComments(updatedComments);
+    } catch {
+      const result = await refreshAToken();
+      setAccessToken(result.data?.getATokenByRToken || '');
+    }
+  };
 
   const [parentComment, setParentComment] = useState<Comment | null>(null);
-
   const handleClickReply = (comment: Comment) => {
     focusInput();
     setParentComment(comment);
@@ -129,8 +138,8 @@ const CommentList = ({ postId, initialComments }: Props) => {
           },
         });
         if (result.data) {
-          const newCommentData = result.data.createComment || [];
-          setNewComments(prev => [newCommentData, ...prev]);
+          const newCommentData = result.data.createComment || {};
+          setComments(prev => [newCommentData, ...prev]);
           resetValue();
         }
       } catch {
@@ -142,27 +151,6 @@ const CommentList = ({ postId, initialComments }: Props) => {
 
   return (
     <>
-      {user &&
-        newComments.length !== 0 &&
-        newComments.map(newComment => {
-          return (
-            <List
-              key={`comment-${newComment.id}`}
-              id={`comment-${newComment.id}`}
-              sx={{ padding: '8px' }}
-            >
-              <CommentItem
-                {...newComment}
-                user={JSON.parse(user)}
-                subCommentCount={0}
-                isLike={false}
-                isMine
-                handleClickReply={handleClickReply}
-              />
-            </List>
-          );
-        })}
-
       {comments.map(comment => {
         const { id } = comment;
         return (
@@ -171,7 +159,11 @@ const CommentList = ({ postId, initialComments }: Props) => {
             key={`comment-${id}`}
             sx={{ padding: '8px' }}
           >
-            <CommentItem {...comment} handleClickReply={handleClickReply} />
+            <CommentItem
+              {...comment}
+              handleClickReply={handleClickReply}
+              handleClickDeleteComment={handleClickDeleteComment}
+            />
           </List>
         );
       })}

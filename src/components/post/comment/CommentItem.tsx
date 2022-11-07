@@ -2,12 +2,7 @@ import React, { useState } from 'react';
 import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
-import {
-  Comment,
-  CREATE_LIKE,
-  CommentWithCount,
-  DELETE_LIKE,
-} from '@queries/post';
+import { Comment, CREATE_LIKE, DELETE_LIKE } from '@queries/post';
 import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { ago } from '@libs/moment';
 import LikeIcon from '@icons/LikeIcon';
@@ -19,8 +14,9 @@ import { CookiesName } from '@libs/values';
 import { setAccessToken } from '@libs/token';
 import SubCommentList from './SubCommentList';
 
-interface Props extends CommentWithCount {
+interface Props extends Comment {
   handleClickReply: (comment: Comment) => void;
+  handleClickDeleteComment: (commentId: number) => Promise<void>;
 }
 
 const CommentItem = ({
@@ -32,6 +28,7 @@ const CommentItem = ({
   isLike: initialLike,
   isMine,
   handleClickReply,
+  handleClickDeleteComment,
 }: Props) => {
   const cookies = parseCookies();
   const refreshToken = cookies[CookiesName.refreshToken];
@@ -81,6 +78,7 @@ const CommentItem = ({
     createdAt,
     isLike: initialLike,
     isMine,
+    subCommentCount,
   };
 
   return (
@@ -145,6 +143,7 @@ const CommentItem = ({
                     fontSize: '1rem',
                     height: '18px',
                   }}
+                  onClick={() => handleClickDeleteComment(commentId)}
                 >
                   삭제
                 </TextButton>
