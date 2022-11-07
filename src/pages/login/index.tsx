@@ -10,7 +10,7 @@ import LoadingButton from '@components/template/LoadingButton';
 import OutlinedInput from '@components/template/OutlinedInput';
 import COLOR from '@styles/colors';
 import { useMutation } from '@apollo/client';
-import { LOGIN_MUTATION, Token } from 'src/queries/auth';
+import { LOGIN_MUTATION, LoginUser } from 'src/queries/auth';
 import { CookiesName } from '@libs/values';
 import { parseCookies } from 'nookies';
 import {
@@ -18,6 +18,7 @@ import {
   getRefreshToken,
   setAccessToken,
   setRefreshToken,
+  setUser,
 } from '@libs/token';
 
 export interface LoginState {
@@ -41,7 +42,7 @@ const Login: NextPage = () => {
     isFailed: false,
   });
 
-  const [login, { loading, error, data }] = useMutation<{ login: Token }>(
+  const [login, { loading, error, data }] = useMutation<LoginUser>(
     LOGIN_MUTATION,
     {
       variables: { email: values.email, password: values.password },
@@ -81,7 +82,8 @@ const Login: NextPage = () => {
   useEffect(() => {
     const backUrl = cookies[CookiesName.backUrl] || '/';
     if (data) {
-      const { accessToken, refreshToken } = data.login;
+      const { accessToken, refreshToken, user } = data.login;
+      setUser(user);
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
       router.push(backUrl);
@@ -140,7 +142,7 @@ const Login: NextPage = () => {
         >
           <Box
             sx={{
-              fontSize: 13,
+              fontSize: '1.2rem',
               fontWeight: 600,
               color: COLOR.GREY.MAIN,
             }}
@@ -208,8 +210,7 @@ const Login: NextPage = () => {
             justifyContent: 'center',
             margin: '14px 0 26px',
             lineHeight: '20px',
-            fontSize: 13,
-            fontWeight: 400,
+            fontSize: '1.2rem',
             color: COLOR.RED,
           }}
         >

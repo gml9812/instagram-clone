@@ -23,7 +23,7 @@ const CssFormControl = styled(FormControl)({
     height: '43px',
     backgroundColor: COLOR.LIGHTGREY,
     borderRadius: 2,
-    fontSize: '1.5rem',
+    fontSize: '1.3rem',
     color: COLOR.CHARCOAL,
     '& fieldset': {
       border: `1px solid ${COLOR.GREY.SUB}`,
@@ -41,7 +41,7 @@ const inputStyle = {
   height: '43px',
   padding: '0 0 0 14px',
   WebkitBoxShadow: `0 0 0 1000px ${COLOR.LIGHTGREY} inset`,
-  fontSize: '1.5rem',
+  fontSize: '1.3rem',
   color: COLOR.CHARCOAL,
 };
 

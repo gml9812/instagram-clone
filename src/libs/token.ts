@@ -1,5 +1,5 @@
 import { serverSideClient } from '@apollo/apolloClient';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
+import { REFRESH_ATOKEN_MUTATION, User } from '@queries/auth';
 import { GetServerSidePropsContext } from 'next';
 import { parseCookies, setCookie } from 'nookies';
 import { CookiesName } from './values';
@@ -14,6 +14,13 @@ export const getRefreshToken = (context: GetServerSidePropsContext) => {
   const cookies = parseCookies(context);
   const refreshToken = cookies[CookiesName.refreshToken] || '';
   return refreshToken;
+};
+
+export const setUser = (user: User) => {
+  setCookie(null, CookiesName.user, JSON.stringify(user), {
+    maxAge: 60 * 60 * 24 * 15,
+    path: '/',
+  });
 };
 
 export const setAccessToken = (token: string) => {

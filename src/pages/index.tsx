@@ -1,25 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import type { GetServerSidePropsContext } from 'next';
-import { Box, CircularProgress, IconButton, List } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import CustomHeader from '@components/layout/CustomHeader';
-import Feed from '@components/feed/Feed';
 import Logo from '@icons/Logo';
 import AddIcon from '@icons/AddIcon';
 import AccountIcon from '@icons/AccountIcon';
 import { GET_POSTS, Post, DEFAULT_POST_SIZE } from '@queries/post';
 import { serverSideClient } from '@apollo/apolloClient';
-import { useMutation, useQuery } from '@apollo/client';
-import { InView } from 'react-intersection-observer';
 import {
   getAccessToken,
   getRefreshToken,
   getUpdatedToken,
   setAccessToken,
 } from '@libs/token';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
-import { parseCookies } from 'nookies';
-import { CookiesName } from '@libs/values';
-import COLOR from '@styles/colors';
+import FeedList from '@components/feed/FeedList';
 
 interface Props {
   initialPosts: Post[];
@@ -30,63 +24,6 @@ const Home = ({ initialPosts, updatedToken }: Props) => {
   if (updatedToken) {
     setAccessToken(updatedToken);
   }
-
-  const cookies = parseCookies();
-  const refreshToken = cookies[CookiesName.refreshToken];
-  const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
-    REFRESH_ATOKEN_MUTATION,
-    {
-      context: {
-        headers: {
-          'R-TOKEN': refreshToken,
-        },
-      },
-    },
-  );
-
-  const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [lastId, setLastId] = useState<number>(
-    initialPosts[initialPosts.length - 1]?.id || 0,
-  );
-  const [isInView, setIsInview] = useState<boolean>(false);
-  const [isEndData, setIsEndData] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { fetchMore, data } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
-    variables: {
-      size: DEFAULT_POST_SIZE,
-      lastId,
-    },
-  });
-
-  const onInfiniteScroll = async () => {
-    try {
-      setIsLoading(true);
-      await fetchMore({
-        variables: {
-          size: DEFAULT_POST_SIZE,
-          lastId,
-        },
-      });
-      setIsInview(true);
-    } catch {
-      const result = await refreshAToken();
-      setAccessToken(result.data?.getATokenByRToken || '');
-    }
-  };
-
-  useEffect(() => {
-    if (isInView) {
-      if (data) {
-        setLastId(data.getPosts[data.getPosts.length - 1].id);
-        setPosts(prev => prev.concat(data.getPosts));
-      }
-      if (!data || data.getPosts.length < DEFAULT_POST_SIZE) {
-        setIsEndData(true);
-      }
-      setIsLoading(false);
-      setIsInview(false);
-    }
-  }, [isInView, data]);
 
   return (
     <>
@@ -108,39 +45,7 @@ const Home = ({ initialPosts, updatedToken }: Props) => {
         }
       />
 
-      {posts.map(post => {
-        return (
-          <List
-            id={`post-${post.id}`}
-            key={`post-${post.id}`}
-            sx={{ padding: '4px  0' }}
-          >
-            <Feed {...post} />
-          </List>
-        );
-      })}
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          height: '20px',
-          color: COLOR.GREY.SUB,
-        }}
-      >
-        {isLoading && !isEndData && (
-          <CircularProgress size={20} color="inherit" />
-        )}
-      </Box>
-
-      {data && (
-        <InView
-          onChange={async inView => {
-            if (inView && !isEndData) {
-              onInfiniteScroll();
-            }
-          }}
-        />
-      )}
+      <FeedList initialPosts={initialPosts} />
     </>
   );
 };
@@ -170,7 +75,7 @@ export const getServerSideProps = async (
 
   const { data } = await serverSideClient.query({
     query: GET_POSTS,
-    variables: { size: DEFAULT_POST_SIZE, lastId: 0 },
+    variables: { postPaging: { size: DEFAULT_POST_SIZE } },
     context: {
       headers: {
         'A-TOKEN': accessToken || updatedToken,

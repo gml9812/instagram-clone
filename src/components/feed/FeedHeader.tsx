@@ -2,9 +2,9 @@ import React, { ReactElement, useState, MouseEvent } from 'react';
 import COLOR from '@styles/colors';
 import { Box, IconButton } from '@mui/material';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { User } from 'src/queries/post';
+import { User } from '@queries/auth';
 import TextButton from '@components/template/TextButton';
+import ProfileButton from '@components/template/ProfileButton';
 import FeedAccordion from './FeedAccordion';
 
 interface Props {
@@ -28,7 +28,7 @@ const FeedHeader = ({ user, isMine }: Props): ReactElement => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '4px 10px',
+        padding: '4px 10px 4px 6px',
         borderBottom: `0.5px solid ${COLOR.GREY.SUB}`,
       }}
     >
@@ -40,17 +40,20 @@ const FeedHeader = ({ user, isMine }: Props): ReactElement => {
           padding: 0,
         }}
       >
-        <IconButton sx={{ padding: '4px', margin: '0 2px 0 0' }}>
-          <AccountCircleIcon
-            sx={{ width: '32px', height: '32px', color: COLOR.GREY.SUB }}
-          />
-        </IconButton>
+        <ProfileButton
+          profileImage={user.profileImage}
+          sx={{}}
+          size={32}
+          borderBoxSize={26}
+          gap={3}
+        />
+
         <TextButton
           sx={{
             display: 'flex',
             justifyContent: 'start',
             padding: 0,
-            fontSize: 13,
+            fontSize: '1.1rem',
             fontWeight: 700,
             color: COLOR.CHARCOAL,
           }}

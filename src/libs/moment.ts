@@ -1,6 +1,6 @@
 import { MomentInput } from 'moment';
-import 'moment/locale/ko';
 import moment from 'moment-timezone';
+import 'moment/locale/ko';
 
 moment.tz.setDefault('Asia/Seoul');
 
@@ -22,10 +22,12 @@ moment.updateLocale('ko', {
 });
 
 export const ago = (time: MomentInput) => {
-  if (moment(time).diff(moment.now()) >= 0) {
+  const utcDateValue = moment(time).valueOf();
+  const localDateValue = utcDateValue + 9 * 60 * 60 * 1000;
+  if (moment(localDateValue).diff(moment.now()) >= 0) {
     return '방금 전';
   }
-  return moment(time).fromNow();
+  return moment(localDateValue).fromNow();
 };
 
 export default moment;

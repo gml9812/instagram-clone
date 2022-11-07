@@ -28,14 +28,14 @@ const StyledMenu = styled((props: MenuProps) => (
 ))(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: 6,
-    minWidth: 160,
+    minWidth: 'max-content',
     color: COLOR.CHARCOAL,
     boxShadow:
       'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
     '& .MuiMenuItem-root': {
       minHeight: 30,
       color: COLOR.CHARCOAL,
-      fontSize: 12,
+      fontSize: '1.1rem',
       '& .MuiSvgIcon-root': {
         width: 18,
         height: 18,
