@@ -6,7 +6,7 @@ import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { DEFAULT_POST_SIZE, GET_POSTS, Post } from '@queries/post';
 import COLOR from '@styles/colors';
 import { parseCookies } from 'nookies';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import Feed from './Feed';
 
@@ -28,14 +28,14 @@ const FeedList = ({ initialPosts }: Props) => {
     },
   );
 
+  const initialLastId = Number(initialPosts[initialPosts.length - 1]?.id);
   const [posts, setPosts] = useState<Post[]>(initialPosts);
-  const [lastId, setLastId] = useState<number>(
-    initialPosts[initialPosts.length - 1]?.id || 0,
+  const [lastId, setLastId] = useState<number | undefined>(
+    initialLastId || undefined,
   );
-  const [isInView, setIsInview] = useState<boolean>(false);
   const [isEndData, setIsEndData] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { fetchMore, data } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
+  const { fetchMore } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
     variables: {
       postPaging: {
         size: DEFAULT_POST_SIZE,
@@ -46,8 +46,7 @@ const FeedList = ({ initialPosts }: Props) => {
 
   const onInfiniteScroll = async () => {
     try {
-      setIsLoading(true);
-      await fetchMore({
+      const { data } = await fetchMore({
         variables: {
           postPaging: {
             size: DEFAULT_POST_SIZE,
@@ -55,26 +54,20 @@ const FeedList = ({ initialPosts }: Props) => {
           },
         },
       });
-      setIsInview(true);
-    } catch {
-      const result = await refreshAToken();
-      setAccessToken(result.data?.getATokenByRToken || '');
-    }
-  };
-
-  useEffect(() => {
-    if (isInView) {
-      if (data) {
-        setLastId(data.getPosts[data.getPosts.length - 1]?.id);
-        setPosts(prev => prev.concat(data.getPosts));
-      }
-      if (!data || data.getPosts.length < DEFAULT_POST_SIZE) {
+      const newPosts = data.getPosts;
+      const updatedLastId = Number(newPosts[newPosts.length - 1]?.id);
+      setPosts(prev => prev.concat(newPosts));
+      setLastId(updatedLastId);
+      if (!newPosts || newPosts.length < DEFAULT_POST_SIZE) {
         setIsEndData(true);
       }
       setIsLoading(false);
-      setIsInview(false);
+    } catch {
+      const result = await refreshAToken();
+      setAccessToken(result.data?.getATokenByRToken || '');
+      setIsLoading(false);
     }
-  }, [isInView, data]);
+  };
 
   return (
     <>
@@ -94,7 +87,7 @@ const FeedList = ({ initialPosts }: Props) => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          height: '20px',
+          height: '30px',
           color: COLOR.GREY.SUB,
         }}
       >
@@ -103,15 +96,14 @@ const FeedList = ({ initialPosts }: Props) => {
         )}
       </Box>
 
-      {data && (
-        <InView
-          onChange={async inView => {
-            if (inView && !isEndData) {
-              onInfiniteScroll();
-            }
-          }}
-        />
-      )}
+      <InView
+        onChange={async inView => {
+          if (inView && !isEndData) {
+            setIsLoading(true);
+            onInfiniteScroll();
+          }
+        }}
+      />
     </>
   );
 };

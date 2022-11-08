@@ -74,6 +74,7 @@ export const GET_POST = gql`
       }
       description
       modifiedAt
+      commentCount
       comments {
         id
         user {

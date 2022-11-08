@@ -25,7 +25,7 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
     },
   );
   const [subComments, setSubComments] = useState<Comment[]>([]);
-  const [lastId, setLastId] = useState<number>(0);
+  const [lastId, setLastId] = useState<number | undefined>(undefined);
   const [isEndData, setIsEndData] = useState<boolean>(false);
 
   const handleClickShowSubComments = async () => {
@@ -35,7 +35,10 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
   useEffect(() => {
     const subCommentsData: Comment[] = data?.getSubComments || [];
     setSubComments(subCommentsData);
-    setLastId(subCommentsData[subCommentsData.length - 1]?.id || 0);
+    const updatedLastId = Number(
+      subCommentsData[subCommentsData.length - 1]?.id,
+    );
+    setLastId(updatedLastId || undefined);
   }, [data]);
 
   const handleClickMoreButton = async () => {
