@@ -1,72 +1,103 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import { serverSideClient } from '@apollo/apolloClient';
 import { DEFAULT_COMMENT_SIZE, GET_POST, PostWithComment } from '@queries/post';
-import {
-  getAccessToken,
-  getRefreshToken,
-  getUpdatedToken,
-  setAccessToken,
-} from '@libs/token';
+import { getAccessToken, setAccessToken } from '@libs/token';
 import COLOR from '@styles/colors';
 import { Box } from '@mui/material';
 import DetailPageHeader from '@components/layout/DetailPageHeader';
 import CommentList from '@components/post/comment/CommentList';
 import PostContent from '@components/post/PostContent';
+import { useMutation, useQuery } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { parseCookies } from 'nookies';
+import { CookiesName } from '@libs/values';
+import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 
-interface Props {
-  updatedToken: string;
-  initialData: PostWithComment;
-}
+const PostPage = () => {
+  const cookies = parseCookies();
+  const refreshToken = cookies[CookiesName.refreshToken];
+  const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
+    REFRESH_ATOKEN_MUTATION,
+    {
+      context: {
+        headers: {
+          'R-TOKEN': refreshToken,
+        },
+      },
+    },
+  );
 
-const PostPage = ({ updatedToken, initialData }: Props) => {
-  if (updatedToken) {
-    setAccessToken(updatedToken);
-  }
+  const router = useRouter();
+  const postId = Number(router.query.id) || undefined;
+  const [initialPost, setInitialPost] = useState<PostWithComment | null>(null);
 
-  const { id, user, description, modifiedAt, comments } = initialData;
+  const { fetchMore } = useQuery<{ getPost: PostWithComment }>(GET_POST, {
+    variables: {
+      id: postId,
+      commentPaging: { size: DEFAULT_COMMENT_SIZE },
+    },
+  });
+
+  const getPost = useCallback(async () => {
+    try {
+      const { data } = await fetchMore({
+        variables: {
+          id: postId,
+          commentPaging: { size: DEFAULT_COMMENT_SIZE },
+        },
+      });
+      setInitialPost(data.getPost);
+    } catch {
+      const result = await refreshAToken();
+      setAccessToken(result.data?.getATokenByRToken || '');
+    }
+  }, [fetchMore, postId, refreshAToken]);
+
+  useEffect(() => {
+    if (postId) {
+      getPost();
+    }
+  }, [getPost, postId]);
 
   return (
     <>
       <DetailPageHeader pageName="댓글" />
 
-      <Box
-        sx={{ padding: '8px', borderBottom: `0.5px solid ${COLOR.GREY.SUB}` }}
-      >
-        <PostContent
-          user={user}
-          description={description}
-          modifiedAt={modifiedAt}
-        />
-      </Box>
+      {initialPost && postId && (
+        <>
+          <Box
+            sx={{
+              padding: '8px',
+              borderBottom: `0.5px solid ${COLOR.GREY.SUB}`,
+            }}
+          >
+            <PostContent
+              user={initialPost.user}
+              description={initialPost.description}
+              modifiedAt={initialPost.modifiedAt}
+            />
+          </Box>
 
-      <CommentList postId={id} initialComments={comments} />
+          {initialPost.comments.length > 0 && (
+            <CommentList
+              postId={postId}
+              commetCount={initialPost.commentCount}
+              initialComments={initialPost.comments}
+            />
+          )}
+        </>
+      )}
     </>
   );
 };
 
 export default PostPage;
-
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
   const accessToken = getAccessToken(context);
-  const refreshToken = getRefreshToken(context);
-  if (!refreshToken) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
-  let updatedToken: string = '';
-  try {
-    if (!accessToken) {
-      const token = await getUpdatedToken(refreshToken);
-      updatedToken = token;
-    }
-  } catch {
+
+  if (!accessToken) {
     return {
       redirect: {
         destination: '/login',
@@ -75,32 +106,7 @@ export const getServerSideProps = async (
     };
   }
 
-  try {
-    const { data } = await serverSideClient.query({
-      query: GET_POST,
-      variables: {
-        id: context.query.id,
-        commentPaging: { size: DEFAULT_COMMENT_SIZE },
-      },
-      context: {
-        headers: {
-          'A-TOKEN': accessToken || updatedToken,
-        },
-      },
-    });
-
-    return {
-      props: {
-        initialData: data.getPost || [],
-        updatedToken,
-      },
-    };
-  } catch {
-    return {
-      props: {
-        initialData: [],
-        updatedToken,
-      },
-    };
-  }
+  return {
+    props: {},
+  };
 };

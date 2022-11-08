@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useRef, useState } from 'react';
 import { parseCookies } from 'nookies';
 import { InView } from 'react-intersection-observer';
 import { useMutation, useQuery } from '@apollo/client';
@@ -20,10 +20,11 @@ import CommentItem from './CommentItem';
 
 interface Props {
   postId: number;
+  commetCount: number;
   initialComments: Comment[];
 }
 
-const CommentList = ({ postId, initialComments }: Props) => {
+const CommentList = ({ postId, commetCount, initialComments }: Props) => {
   const cookies = parseCookies();
   const refreshToken = cookies[CookiesName.refreshToken];
   const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
@@ -37,14 +38,14 @@ const CommentList = ({ postId, initialComments }: Props) => {
     },
   );
 
+  const initialLastId = Number(initialComments[initialComments.length - 1]?.id);
   const [comments, setComments] = useState<Comment[]>(initialComments);
-  const [lastId, setLastId] = useState<number>(
-    initialComments[initialComments.length - 1]?.id || 0,
+  const [lastId, setLastId] = useState<number | undefined>(
+    initialLastId || undefined,
   );
-  const [isInView, setIsInview] = useState<boolean>(false);
   const [isEndData, setIsEndData] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { fetchMore, data } = useQuery<{ getPost: PostWithComment }>(GET_POST, {
+  const { fetchMore } = useQuery<{ getPost: PostWithComment }>(GET_POST, {
     variables: {
       id: postId,
       commentPaging: {
@@ -55,9 +56,12 @@ const CommentList = ({ postId, initialComments }: Props) => {
   });
 
   const onInfiniteScroll = async () => {
+    if (commetCount < DEFAULT_COMMENT_SIZE) {
+      setIsLoading(false);
+      return;
+    }
     try {
-      setIsLoading(true);
-      await fetchMore({
+      const { data } = await fetchMore({
         variables: {
           commentPaging: {
             size: DEFAULT_COMMENT_SIZE,
@@ -65,27 +69,22 @@ const CommentList = ({ postId, initialComments }: Props) => {
           },
         },
       });
-      setIsInview(true);
-    } catch {
-      const result = await refreshAToken();
-      setAccessToken(result.data?.getATokenByRToken || '');
-    }
-  };
-
-  useEffect(() => {
-    if (isInView) {
-      if (data && data.getPost.comments.length > 0) {
-        const commentsData = data.getPost.comments;
-        setLastId(commentsData[commentsData.length - 1]?.id);
-        setComments(prev => prev.concat(commentsData));
+      const newComments = data.getPost.comments;
+      const updatedLastId = Number(newComments[newComments.length - 1]?.id);
+      setComments(prev => prev.concat(newComments));
+      if (updatedLastId) {
+        setLastId(updatedLastId);
       }
-      if (!data || data.getPost.comments.length < DEFAULT_COMMENT_SIZE) {
+      if (!newComments || newComments.length < DEFAULT_COMMENT_SIZE) {
         setIsEndData(true);
       }
       setIsLoading(false);
-      setIsInview(false);
+    } catch {
+      const result = await refreshAToken();
+      setAccessToken(result.data?.getATokenByRToken || '');
+      setIsLoading(false);
     }
-  }, [isInView, data]);
+  };
 
   const inputRef = useRef<HTMLInputElement>(null);
   const focusInput = () => {
@@ -106,10 +105,10 @@ const CommentList = ({ postId, initialComments }: Props) => {
   const handleClickDeleteComment = async (commentId: number) => {
     try {
       await deleteComment({ variables: { id: commentId } });
-      const updatedComments = comments.filter(
+      const updatedCommentList = comments.filter(
         comment => comment.id !== commentId,
       );
-      setComments(updatedComments);
+      setComments(updatedCommentList);
     } catch {
       const result = await refreshAToken();
       setAccessToken(result.data?.getATokenByRToken || '');
@@ -161,6 +160,7 @@ const CommentList = ({ postId, initialComments }: Props) => {
           >
             <CommentItem
               {...comment}
+              id={Number(comment.id)}
               handleClickReply={handleClickReply}
               handleClickDeleteComment={handleClickDeleteComment}
             />
@@ -172,7 +172,7 @@ const CommentList = ({ postId, initialComments }: Props) => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          height: '20px',
+          height: '30px',
           color: COLOR.GREY.SUB,
         }}
       >
@@ -181,15 +181,14 @@ const CommentList = ({ postId, initialComments }: Props) => {
         )}
       </Box>
 
-      {data && data.getPost.comments && (
-        <InView
-          onChange={async inView => {
-            if (inView && !isEndData) {
-              onInfiniteScroll();
-            }
-          }}
-        />
-      )}
+      <InView
+        onChange={async inView => {
+          if (inView && !isEndData) {
+            setIsLoading(true);
+            onInfiniteScroll();
+          }
+        }}
+      />
 
       <CommentInput
         inputRef={inputRef}
