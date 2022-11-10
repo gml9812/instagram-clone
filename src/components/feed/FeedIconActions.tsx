@@ -7,10 +7,6 @@ import TextButton from '@components/template/TextButton';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
 import { CREATE_LIKE, DELETE_LIKE } from '@queries/post';
-import { setAccessToken } from '@libs/token';
-import { parseCookies } from 'nookies';
-import { CookiesName } from '@libs/values';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 
 interface Props {
   id: number;
@@ -20,18 +16,6 @@ interface Props {
 
 const FeedIconActions = ({ id, isLike, likeCount }: Props) => {
   const router = useRouter();
-  const cookies = parseCookies();
-  const refreshToken = cookies[CookiesName.refreshToken];
-  const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
-    REFRESH_ATOKEN_MUTATION,
-    {
-      context: {
-        headers: {
-          'R-TOKEN': refreshToken,
-        },
-      },
-    },
-  );
 
   const [likeState, setLikeState] = useState<{
     isLike: boolean;
@@ -47,21 +31,11 @@ const FeedIconActions = ({ id, isLike, likeCount }: Props) => {
 
   const handleClickLike = async () => {
     if (!likeState.isLike) {
+      createLike();
       setLikeState({ isLike: true, count: likeState.count + 1 });
-      try {
-        createLike();
-      } catch {
-        const result = await refreshAToken();
-        setAccessToken(result.data?.getATokenByRToken || '');
-      }
     } else {
+      deleteLike();
       setLikeState({ isLike: false, count: likeState.count - 1 });
-      try {
-        deleteLike();
-      } catch {
-        const result = await refreshAToken();
-        setAccessToken(result.data?.getATokenByRToken || '');
-      }
     }
   };
 

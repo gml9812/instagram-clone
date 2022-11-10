@@ -1,10 +1,6 @@
 import React, { ChangeEvent, useRef, useState } from 'react';
-import { parseCookies } from 'nookies';
 import { InView } from 'react-intersection-observer';
 import { useMutation, useQuery } from '@apollo/client';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
-import { setAccessToken } from '@libs/token';
-import { CookiesName } from '@libs/values';
 import { Box, CircularProgress, List } from '@mui/material';
 import {
   DEFAULT_COMMENT_SIZE,
@@ -25,19 +21,6 @@ interface Props {
 }
 
 const CommentList = ({ postId, commetCount, initialComments }: Props) => {
-  const cookies = parseCookies();
-  const refreshToken = cookies[CookiesName.refreshToken];
-  const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
-    REFRESH_ATOKEN_MUTATION,
-    {
-      context: {
-        headers: {
-          'R-TOKEN': refreshToken,
-        },
-      },
-    },
-  );
-
   const initialLastId = Number(initialComments[initialComments.length - 1]?.id);
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [lastId, setLastId] = useState<number | undefined>(
@@ -60,30 +43,25 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
       setIsLoading(false);
       return;
     }
-    try {
-      const { data } = await fetchMore({
-        variables: {
-          commentPaging: {
-            size: DEFAULT_COMMENT_SIZE,
-            lastId,
-          },
+
+    const { data } = await fetchMore({
+      variables: {
+        commentPaging: {
+          size: DEFAULT_COMMENT_SIZE,
+          lastId,
         },
-      });
-      const newComments = data.getPost.comments;
-      const updatedLastId = Number(newComments[newComments.length - 1]?.id);
-      setComments(prev => prev.concat(newComments));
-      if (updatedLastId) {
-        setLastId(updatedLastId);
-      }
-      if (!newComments || newComments.length < DEFAULT_COMMENT_SIZE) {
-        setIsEndData(true);
-      }
-      setIsLoading(false);
-    } catch {
-      const result = await refreshAToken();
-      setAccessToken(result.data?.getATokenByRToken || '');
-      setIsLoading(false);
+      },
+    });
+    const newComments = data.getPost.comments;
+    const updatedLastId = Number(newComments[newComments.length - 1]?.id);
+    setComments(prev => prev.concat(newComments));
+    if (updatedLastId) {
+      setLastId(updatedLastId);
     }
+    if (!newComments || newComments.length < DEFAULT_COMMENT_SIZE) {
+      setIsEndData(true);
+    }
+    setIsLoading(false);
   };
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -103,16 +81,11 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
   );
   const [deleteComment] = useMutation(DELETE_COMMENT);
   const handleClickDeleteComment = async (commentId: number) => {
-    try {
-      await deleteComment({ variables: { id: commentId } });
-      const updatedCommentList = comments.filter(
-        comment => comment.id !== commentId,
-      );
-      setComments(updatedCommentList);
-    } catch {
-      const result = await refreshAToken();
-      setAccessToken(result.data?.getATokenByRToken || '');
-    }
+    await deleteComment({ variables: { id: commentId } });
+    const updatedCommentList = comments.filter(
+      comment => Number(comment.id) !== commentId,
+    );
+    setComments(updatedCommentList);
   };
 
   const [parentComment, setParentComment] = useState<Comment | null>(null);
@@ -129,21 +102,16 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
 
   const handleClickSubmit = async () => {
     if (inputValue !== '') {
-      try {
-        const result = await createComment({
-          variables: {
-            postId,
-            description: inputValue,
-          },
-        });
-        if (result.data) {
-          const newCommentData = result.data.createComment || {};
-          setComments(prev => [newCommentData, ...prev]);
-          resetValue();
-        }
-      } catch {
-        const result = await refreshAToken();
-        setAccessToken(result.data?.getATokenByRToken || '');
+      const result = await createComment({
+        variables: {
+          postId,
+          description: inputValue,
+        },
+      });
+      if (result.data) {
+        const newCommentData = result.data.createComment || {};
+        setComments(prev => [newCommentData, ...prev]);
+        resetValue();
       }
     }
   };

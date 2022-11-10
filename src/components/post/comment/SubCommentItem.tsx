@@ -3,15 +3,11 @@ import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
 import { CREATE_LIKE, Comment } from '@queries/post';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { ago } from '@libs/moment';
 import LikeIcon from '@icons/LikeIcon';
 import ProfileButton from '@components/template/ProfileButton';
 import HtmlText from '@components/feed/HtmlText';
 import { useMutation } from '@apollo/client';
-import { parseCookies } from 'nookies';
-import { CookiesName } from '@libs/values';
-import { setAccessToken } from '@libs/token';
 
 interface Props extends Comment {
   handleClickReply: () => void;
@@ -26,19 +22,6 @@ const SubCommentItem = ({
   isMine,
   handleClickReply,
 }: Props) => {
-  const cookies = parseCookies();
-  const refreshToken = cookies[CookiesName.refreshToken];
-  const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
-    REFRESH_ATOKEN_MUTATION,
-    {
-      context: {
-        headers: {
-          'R-TOKEN': refreshToken,
-        },
-      },
-    },
-  );
-
   const [isLike, setIsLike] = useState<boolean>(initialLike);
   const [createLike] = useMutation<{ createLike: boolean }>(CREATE_LIKE, {
     variables: { likeInput: { itemId: id, type: 'COMMENT' } },
@@ -46,13 +29,8 @@ const SubCommentItem = ({
 
   const handleClickLike = async () => {
     if (!isLike) {
+      createLike();
       setIsLike(true);
-      try {
-        createLike();
-      } catch {
-        const result = await refreshAToken();
-        setAccessToken(result.data?.getATokenByRToken || '');
-      }
     }
   };
 
