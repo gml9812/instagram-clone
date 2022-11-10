@@ -57,13 +57,11 @@ const PostPage = () => {
             />
           </Box>
 
-          {initialPost.comments.length > 0 && (
-            <CommentList
-              postId={postId}
-              commetCount={initialPost.commentCount}
-              initialComments={initialPost.comments}
-            />
-          )}
+          <CommentList
+            postId={postId}
+            commetCount={initialPost.commentCount}
+            initialComments={initialPost.comments}
+          />
         </>
       )}
     </>

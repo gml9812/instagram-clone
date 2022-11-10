@@ -35,8 +35,9 @@ const HtmlText = ({ sx, nickname, description, showAllDescription }: Props) => {
         color: COLOR.CHARCOAL,
         overflow: 'hidden',
         textOverflow: 'clip',
-        whiteSpace: 'nowrap',
+        whiteSpace: 'normal',
         lineHeight: '18px',
+        height: '18px',
       }
     : {
         fontSize: '1.1rem',
