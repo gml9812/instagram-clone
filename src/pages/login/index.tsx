@@ -14,7 +14,6 @@ import { LOGIN_MUTATION, LoginUser } from 'src/queries/auth';
 import { CookiesName } from '@libs/values';
 import { parseCookies } from 'nookies';
 import {
-  getAccessToken,
   getRefreshToken,
   setAccessToken,
   setRefreshToken,
@@ -235,10 +234,9 @@ export default Login;
 export const getServerSideProps = async (
   context: GetServerSidePropsContext,
 ) => {
-  const accessToken = getAccessToken(context);
   const refreshToken = getRefreshToken(context);
 
-  if (accessToken && refreshToken) {
+  if (refreshToken) {
     return {
       redirect: {
         destination: '/',

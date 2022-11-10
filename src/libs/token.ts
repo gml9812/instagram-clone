@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-cycle
 import { serverSideClient } from '@apollo/apolloClient';
 import { REFRESH_ATOKEN_MUTATION, User } from '@queries/auth';
 import { GetServerSidePropsContext } from 'next';
@@ -38,13 +39,26 @@ export const setRefreshToken = (token: string) => {
 };
 
 export const getUpdatedToken = async (refreshToken: string) => {
-  const { data } = await serverSideClient.mutate({
-    mutation: REFRESH_ATOKEN_MUTATION,
-    context: {
-      headers: {
-        'R-TOKEN': refreshToken,
+  try {
+    const { data } = await serverSideClient.mutate({
+      mutation: REFRESH_ATOKEN_MUTATION,
+      context: {
+        headers: {
+          'R-TOKEN': refreshToken,
+        },
       },
-    },
-  });
-  return data.getATokenByRToken || '';
+    });
+    const updatedToken = data.getATokenByRToken;
+    if (updatedToken) {
+      setAccessToken(updatedToken);
+    }
+    return data.updatedToken || '';
+  } catch {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
 };

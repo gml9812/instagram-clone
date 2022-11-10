@@ -1,11 +1,7 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { setAccessToken } from '@libs/token';
-import { CookiesName } from '@libs/values';
+import { useQuery } from '@apollo/client';
 import { Box, CircularProgress, List } from '@mui/material';
-import { REFRESH_ATOKEN_MUTATION } from '@queries/auth';
 import { DEFAULT_POST_SIZE, GET_POSTS, Post } from '@queries/post';
 import COLOR from '@styles/colors';
-import { parseCookies } from 'nookies';
 import React, { useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import Feed from './Feed';
@@ -15,19 +11,6 @@ interface Props {
 }
 
 const FeedList = ({ initialPosts }: Props) => {
-  const cookies = parseCookies();
-  const refreshToken = cookies[CookiesName.refreshToken];
-  const [refreshAToken] = useMutation<{ getATokenByRToken: string }>(
-    REFRESH_ATOKEN_MUTATION,
-    {
-      context: {
-        headers: {
-          'R-TOKEN': refreshToken,
-        },
-      },
-    },
-  );
-
   const initialLastId = Number(initialPosts[initialPosts.length - 1]?.id);
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [lastId, setLastId] = useState<number | undefined>(
@@ -45,28 +28,22 @@ const FeedList = ({ initialPosts }: Props) => {
   });
 
   const onInfiniteScroll = async () => {
-    try {
-      const { data } = await fetchMore({
-        variables: {
-          postPaging: {
-            size: DEFAULT_POST_SIZE,
-            lastId,
-          },
+    const { data } = await fetchMore({
+      variables: {
+        postPaging: {
+          size: DEFAULT_POST_SIZE,
+          lastId,
         },
-      });
-      const newPosts = data.getPosts;
-      const updatedLastId = Number(newPosts[newPosts.length - 1]?.id);
-      setPosts(prev => prev.concat(newPosts));
-      setLastId(updatedLastId);
-      if (!newPosts || newPosts.length < DEFAULT_POST_SIZE) {
-        setIsEndData(true);
-      }
-      setIsLoading(false);
-    } catch {
-      const result = await refreshAToken();
-      setAccessToken(result.data?.getATokenByRToken || '');
-      setIsLoading(false);
+      },
+    });
+    const newPosts = data.getPosts;
+    const updatedLastId = Number(newPosts[newPosts.length - 1]?.id);
+    setPosts(prev => prev.concat(newPosts));
+    setLastId(updatedLastId);
+    if (!newPosts || newPosts.length < DEFAULT_POST_SIZE) {
+      setIsEndData(true);
     }
+    setIsLoading(false);
   };
 
   return (
