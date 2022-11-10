@@ -41,6 +41,7 @@ export const GET_POSTS = gql`
       likeCount
       commentCount
       isLike
+      isMine
       modifiedAt
     }
   }

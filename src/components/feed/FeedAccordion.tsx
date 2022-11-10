@@ -66,7 +66,7 @@ const FeedAccordion = ({ anchorEl, isOpen, isMine, handleClose }: Props) => {
       }}
     >
       {isMine ? (
-        <>
+        <ul>
           <MenuItem onClick={handleClose} disableRipple>
             <EditIcon />
             수정하기
@@ -76,7 +76,7 @@ const FeedAccordion = ({ anchorEl, isOpen, isMine, handleClose }: Props) => {
             <DeleteIcon />
             삭제하기
           </MenuItem>
-        </>
+        </ul>
       ) : (
         <MenuItem onClick={handleClose} disableRipple>
           <ArticleIcon />
