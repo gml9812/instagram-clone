@@ -57,6 +57,7 @@ export interface Comment {
   createdAt: string;
   isLike: boolean;
   isMine: boolean;
+  likeCount: number;
   subCommentCount: number;
 }
 
@@ -90,6 +91,7 @@ export const GET_POST = gql`
         description
         subCommentCount
         isLike
+        likeCount
         isMine
         createdAt
       }
@@ -114,6 +116,7 @@ export const GET_COMMENTS = gql`
       }
       description
       isLike
+      likeCount
       isMine
       createdAt
     }
@@ -131,6 +134,7 @@ export const CREATE_COMMENT = gql`
       }
       description
       isLike
+      likeCount
       isMine
       createdAt
     }
@@ -162,6 +166,7 @@ export const CREATE_SUBCOMMENT = gql`
       }
       description
       isLike
+      likeCount
       isMine
       createdAt
     }

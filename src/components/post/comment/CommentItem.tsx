@@ -20,12 +20,16 @@ const CommentItem = ({
   description,
   subCommentCount = 0,
   createdAt,
-  isLike: initialLike,
+  isLike,
   isMine,
+  likeCount,
   handleClickReply,
   handleClickDeleteComment,
 }: Props) => {
-  const [isLike, setIsLike] = useState<boolean>(initialLike);
+  const [likeState, setLikeState] = useState<{
+    isLike: boolean;
+    count: number;
+  }>({ isLike, count: likeCount });
   const [createLike] = useMutation<{ createLike: boolean }>(CREATE_LIKE, {
     variables: { likeInput: { itemId: commentId, type: 'COMMENT' } },
   });
@@ -34,12 +38,12 @@ const CommentItem = ({
   });
 
   const handleClickLike = async () => {
-    if (!isLike) {
+    if (!likeState.isLike) {
       createLike();
-      setIsLike(true);
+      setLikeState({ isLike: true, count: likeState.count + 1 });
     } else {
       deleteLike();
-      setIsLike(false);
+      setLikeState({ isLike: false, count: likeState.count - 1 });
     }
   };
 
@@ -48,9 +52,10 @@ const CommentItem = ({
     user,
     description,
     createdAt,
-    isLike: initialLike,
+    isLike,
     isMine,
     subCommentCount,
+    likeCount,
   };
 
   return (
@@ -92,12 +97,28 @@ const CommentItem = ({
           >
             {ago(createdAt)}
 
+            {!!likeState.count && (
+              <TextButton
+                sx={{
+                  minWidth: 'max-content',
+                  margin: '0 0 0 18px',
+                  padding: 0,
+                  fontSize: '1rem',
+                  fontWeight: 400,
+                  height: '18px',
+                }}
+              >
+                좋아요 {likeState.count}개
+              </TextButton>
+            )}
+
             <TextButton
               sx={{
                 minWidth: 'max-content',
-                margin: '-1px 0 0 18px',
+                margin: '0 0 0 18px',
                 padding: 0,
                 fontSize: '1rem',
+                fontWeight: 400,
                 height: '18px',
               }}
               onClick={() => handleClickReply(comment)}
@@ -109,7 +130,7 @@ const CommentItem = ({
               <TextButton
                 sx={{
                   minWidth: 'max-content',
-                  margin: '-1px 0 0 18px',
+                  margin: '0 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',
                   height: '18px',
@@ -128,7 +149,7 @@ const CommentItem = ({
         onClick={handleClickLike}
       >
         <LikeIcon
-          isLike={isLike}
+          isLike={likeState.isLike}
           strokeColor={COLOR.GREY.MAIN}
           strokeWidth="1.5"
         />
