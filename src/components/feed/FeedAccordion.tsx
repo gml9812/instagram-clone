@@ -7,10 +7,12 @@ import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import COLOR from '@styles/colors';
 
 interface Props {
-  anchorEl: HTMLElement | null;
+  postId: number;
   isOpen: boolean;
   isMine: boolean;
+  anchorEl: HTMLElement | null;
   handleClose: () => void;
+  handleClickDeletePost: (postId: number) => Promise<void>;
 }
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -50,7 +52,14 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const FeedAccordion = ({ anchorEl, isOpen, isMine, handleClose }: Props) => {
+const FeedAccordion = ({
+  postId,
+  isOpen,
+  isMine,
+  anchorEl,
+  handleClose,
+  handleClickDeletePost,
+}: Props) => {
   return (
     <StyledMenu
       anchorEl={anchorEl}
@@ -73,7 +82,13 @@ const FeedAccordion = ({ anchorEl, isOpen, isMine, handleClose }: Props) => {
             수정하기
           </MenuItem>
           <Divider sx={{ margin: 0 }} />
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleClickDeletePost(postId);
+            }}
+            disableRipple
+          >
             <DeleteIcon />
             삭제하기
           </MenuItem>

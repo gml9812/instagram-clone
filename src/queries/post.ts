@@ -93,6 +93,12 @@ export const GET_POST = gql`
   }
 `;
 
+export const DELETE_POST = gql`
+  mutation deletePost($id: ID!) {
+    deletePost(id: $id)
+  }
+`;
+
 export const GET_COMMENTS = gql`
   query getSubComments($id: ID!, $commentPaging: CommentPagingInput!) {
     getSubComments(id: $id, commentPaging: $commentPaging) {
