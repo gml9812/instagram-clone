@@ -11,7 +11,7 @@ interface Props {
 }
 
 const FeedList = ({ initialPosts }: Props) => {
-  const initialLastId = Number(initialPosts[initialPosts.length - 1]?.id);
+  const initialLastId = initialPosts[initialPosts.length - 1]?.id;
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [lastId, setLastId] = useState<number | undefined>(
     initialLastId || undefined,
@@ -43,7 +43,7 @@ const FeedList = ({ initialPosts }: Props) => {
       },
     });
     const newPosts = data.getPosts;
-    const updatedLastId = Number(newPosts[newPosts.length - 1]?.id);
+    const updatedLastId = newPosts[newPosts.length - 1]?.id;
     setPosts(prev => prev.concat(newPosts));
     setLastId(updatedLastId);
     if (!newPosts || newPosts.length < DEFAULT_POST_SIZE) {

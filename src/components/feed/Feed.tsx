@@ -25,7 +25,7 @@ const Feed = ({
   return (
     <>
       <FeedHeader
-        postId={Number(id)}
+        postId={id}
         user={user}
         isMine={isMine}
         handleClickDeletePost={handleClickDeletePost}
