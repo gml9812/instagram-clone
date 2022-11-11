@@ -2,7 +2,8 @@ import React from 'react';
 import { Divider, Menu, MenuItem, MenuProps, styled } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ArticleIcon from '@mui/icons-material/Article';
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
+import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import COLOR from '@styles/colors';
 
 interface Props {
@@ -28,7 +29,7 @@ const StyledMenu = styled((props: MenuProps) => (
 ))(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: 6,
-    minWidth: 'max-content',
+    minWidth: '150px',
     color: COLOR.CHARCOAL,
     boxShadow:
       'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
@@ -78,10 +79,17 @@ const FeedAccordion = ({ anchorEl, isOpen, isMine, handleClose }: Props) => {
           </MenuItem>
         </ul>
       ) : (
-        <MenuItem onClick={handleClose} disableRipple>
-          <ArticleIcon />
-          게시물 보러가기
-        </MenuItem>
+        <ul>
+          <MenuItem onClick={handleClose} disableRipple>
+            <AccountBoxRoundedIcon />
+            프로필 보기
+          </MenuItem>
+          <Divider sx={{ margin: 0 }} />
+          <MenuItem onClick={handleClose} disableRipple>
+            <CommentRoundedIcon />
+            댓글 달기
+          </MenuItem>
+        </ul>
       )}
     </StyledMenu>
   );
