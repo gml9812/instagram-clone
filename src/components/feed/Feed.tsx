@@ -19,7 +19,7 @@ const Feed = ({
   commentCount,
   isLike,
   isMine,
-  modifiedAt,
+  createdAt,
   handleClickDeletePost,
 }: Props): ReactElement => {
   return (
@@ -38,7 +38,7 @@ const Feed = ({
           nickname={user.nickname}
           description={description}
           commentCount={commentCount}
-          modifiedAt={modifiedAt}
+          createdAt={createdAt}
         />
       </Box>
     </>

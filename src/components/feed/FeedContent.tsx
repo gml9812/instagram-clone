@@ -11,7 +11,7 @@ interface Props {
   nickname: string;
   description: string;
   commentCount: number;
-  modifiedAt: string;
+  createdAt: string;
 }
 
 const FeedText = ({
@@ -19,7 +19,7 @@ const FeedText = ({
   nickname,
   description,
   commentCount,
-  modifiedAt,
+  createdAt,
 }: Props): ReactElement => {
   const router = useRouter();
   const handleClickComment = () => {
@@ -60,7 +60,7 @@ const FeedText = ({
           lineHeight: '18px',
         }}
       >
-        {ago(modifiedAt)}
+        {ago(createdAt)}
       </Box>
     </>
   );

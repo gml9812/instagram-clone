@@ -9,10 +9,10 @@ import React from 'react';
 interface Props {
   user: User;
   description: string;
-  modifiedAt: string;
+  createdAt: string;
 }
 
-const PostContent = ({ user, description, modifiedAt }: Props) => {
+const PostContent = ({ user, description, createdAt }: Props) => {
   return (
     <Box
       sx={{
@@ -50,7 +50,7 @@ const PostContent = ({ user, description, modifiedAt }: Props) => {
               lineHeight: '18px',
             }}
           >
-            {ago(modifiedAt)}
+            {ago(createdAt)}
           </Box>
         </Box>
       </Box>

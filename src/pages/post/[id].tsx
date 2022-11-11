@@ -53,7 +53,7 @@ const PostPage = () => {
             <PostContent
               user={initialPost.user}
               description={initialPost.description}
-              modifiedAt={initialPost.modifiedAt}
+              createdAt={initialPost.createdAt}
             />
           </Box>
 

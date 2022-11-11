@@ -17,7 +17,7 @@ export interface Post {
   commentCount: number;
   isLike: boolean;
   isMine: boolean;
-  modifiedAt: string;
+  createdAt: string;
 }
 
 export const DEFAULT_POST_SIZE = 10;
@@ -42,7 +42,7 @@ export const GET_POSTS = gql`
       commentCount
       isLike
       isMine
-      modifiedAt
+      createdAt
     }
   }
 `;
@@ -74,7 +74,7 @@ export const GET_POST = gql`
         profileImage
       }
       description
-      modifiedAt
+      createdAt
       commentCount
       comments {
         id
