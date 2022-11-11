@@ -84,7 +84,7 @@ const SubCommentList = ({ commentId, count, subNewComments }: Props) => {
   const handleClickDeleteSubComment = async (subCommentId: number) => {
     await deleteComment({ variables: { id: subCommentId } });
     const updatedSubCommentList = subComments.filter(
-      subComment => Number(subComment.id) === Number(subCommentId),
+      subComment => Number(subComment.id) !== Number(subCommentId),
     );
     if (updatedSubCommentList.length === 0) {
       handleClickHideButton();
