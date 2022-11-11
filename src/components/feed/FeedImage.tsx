@@ -54,7 +54,12 @@ const FeedImage = ({ imageList }: Props): ReactElement => {
                     aspectRatio: `${image.width} / ${image.height}`,
                   }}
                 >
-                  <Image src={`${image.url}`} alt="" layout="fill" priority />
+                  <Image
+                    src={`${image.url}`}
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                  />
                 </Box>
               </SwiperSlide>
             );

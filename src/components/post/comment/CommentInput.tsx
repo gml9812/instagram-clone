@@ -110,7 +110,7 @@ const CommentInput = ({
             handleChange={event => {
               handleChangeInput(event);
             }}
-            sx={{}}
+            sx={{ imeMode: 'auto' }}
             endAdornment={
               inputValue === '' ? undefined : (
                 <TextButton

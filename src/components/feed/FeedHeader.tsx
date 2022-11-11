@@ -8,11 +8,18 @@ import ProfileButton from '@components/template/ProfileButton';
 import FeedAccordion from './FeedAccordion';
 
 interface Props {
+  postId: number;
   user: User;
   isMine: boolean;
+  handleClickDeletePost: (postId: number) => Promise<void>;
 }
 
-const FeedHeader = ({ user, isMine }: Props): ReactElement => {
+const FeedHeader = ({
+  postId,
+  user,
+  isMine,
+  handleClickDeletePost,
+}: Props): ReactElement => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -68,10 +75,12 @@ const FeedHeader = ({ user, isMine }: Props): ReactElement => {
       </IconButton>
 
       <FeedAccordion
-        anchorEl={anchorEl}
+        postId={postId}
         isOpen={isOpen}
         isMine={isMine}
+        anchorEl={anchorEl}
         handleClose={handleClose}
+        handleClickDeletePost={handleClickDeletePost}
       />
     </Box>
   );

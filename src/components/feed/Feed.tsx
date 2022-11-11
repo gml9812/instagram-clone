@@ -6,6 +6,10 @@ import FeedImage from './FeedImage';
 import FeedContent from './FeedContent';
 import FeedIconActions from './FeedIconActions';
 
+interface Props extends Post {
+  handleClickDeletePost: (postId: number) => Promise<void>;
+}
+
 const Feed = ({
   id,
   user,
@@ -15,11 +19,17 @@ const Feed = ({
   commentCount,
   isLike,
   isMine,
-  modifiedAt,
-}: Post): ReactElement => {
+  createdAt,
+  handleClickDeletePost,
+}: Props): ReactElement => {
   return (
     <>
-      <FeedHeader user={user} isMine={isMine} />
+      <FeedHeader
+        postId={id}
+        user={user}
+        isMine={isMine}
+        handleClickDeletePost={handleClickDeletePost}
+      />
       <FeedImage imageList={medias} />
       <Box>
         <FeedIconActions id={id} isLike={isLike} likeCount={likeCount} />
@@ -28,7 +38,7 @@ const Feed = ({
           nickname={user.nickname}
           description={description}
           commentCount={commentCount}
-          modifiedAt={modifiedAt}
+          createdAt={createdAt}
         />
       </Box>
     </>

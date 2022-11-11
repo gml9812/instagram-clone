@@ -10,7 +10,7 @@ import HtmlText from '@components/feed/HtmlText';
 import { useMutation } from '@apollo/client';
 
 interface Props extends Comment {
-  handleClickReply: () => void;
+  handleClickDeleteSubComment: (subCommentId: number) => Promise<void>;
 }
 
 const SubCommentItem = ({
@@ -20,7 +20,7 @@ const SubCommentItem = ({
   createdAt,
   isLike: initialLike,
   isMine,
-  handleClickReply,
+  handleClickDeleteSubComment,
 }: Props) => {
   const [isLike, setIsLike] = useState<boolean>(initialLike);
   const [createLike] = useMutation<{ createLike: boolean }>(CREATE_LIKE, {
@@ -73,19 +73,6 @@ const SubCommentItem = ({
           >
             {ago(createdAt)}
 
-            <TextButton
-              sx={{
-                minWidth: 'max-content',
-                margin: '-1px 0 0 18px',
-                padding: 0,
-                fontSize: '1rem',
-                height: '18px',
-              }}
-              onClick={handleClickReply}
-            >
-              답글 달기
-            </TextButton>
-
             {isMine && (
               <TextButton
                 sx={{
@@ -95,6 +82,7 @@ const SubCommentItem = ({
                   fontSize: '1rem',
                   height: '18px',
                 }}
+                onClick={() => handleClickDeleteSubComment(id)}
               >
                 삭제
               </TextButton>

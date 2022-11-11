@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Box, CircularProgress, List } from '@mui/material';
-import { DEFAULT_POST_SIZE, GET_POSTS, Post } from '@queries/post';
+import { DEFAULT_POST_SIZE, DELETE_POST, GET_POSTS, Post } from '@queries/post';
 import COLOR from '@styles/colors';
 import React, { useState } from 'react';
 import { InView } from 'react-intersection-observer';
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const FeedList = ({ initialPosts }: Props) => {
-  const initialLastId = Number(initialPosts[initialPosts.length - 1]?.id);
+  const initialLastId = initialPosts[initialPosts.length - 1]?.id;
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [lastId, setLastId] = useState<number | undefined>(
     initialLastId || undefined,
@@ -26,6 +26,14 @@ const FeedList = ({ initialPosts }: Props) => {
       },
     },
   });
+  const [deletePost] = useMutation(DELETE_POST);
+  const handleClickDeletePost = async (postId: number) => {
+    await deletePost({ variables: { id: postId } });
+    const updatedPostList = posts.filter(
+      post => Number(post.id) !== Number(postId),
+    );
+    setPosts(updatedPostList);
+  };
 
   const onInfiniteScroll = async () => {
     const { data } = await fetchMore({
@@ -37,7 +45,7 @@ const FeedList = ({ initialPosts }: Props) => {
       },
     });
     const newPosts = data.getPosts;
-    const updatedLastId = Number(newPosts[newPosts.length - 1]?.id);
+    const updatedLastId = newPosts[newPosts.length - 1]?.id;
     setPosts(prev => prev.concat(newPosts));
     setLastId(updatedLastId);
     if (!newPosts || newPosts.length < DEFAULT_POST_SIZE) {
@@ -55,7 +63,7 @@ const FeedList = ({ initialPosts }: Props) => {
             key={`post-${post.id}`}
             sx={{ padding: '4px  0' }}
           >
-            <Feed {...post} />
+            <Feed {...post} handleClickDeletePost={handleClickDeletePost} />
           </List>
         );
       })}

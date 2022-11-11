@@ -7,6 +7,8 @@ import AccountIcon from '@icons/AccountIcon';
 import { GET_POSTS, Post, DEFAULT_POST_SIZE } from '@queries/post';
 import FeedList from '@components/feed/FeedList';
 import { useQuery } from '@apollo/client';
+import { getRefreshToken } from '@libs/token';
+import { GetServerSidePropsContext } from 'next';
 
 const Home = () => {
   const [initialPosts, setInitialPosts] = useState<Post[]>([]);
@@ -50,3 +52,22 @@ const Home = () => {
 };
 
 export default Home;
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext,
+) => {
+  const refreshToken = getRefreshToken(context);
+
+  if (!refreshToken) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
