@@ -64,6 +64,10 @@ export interface PostWithComment extends Post {
   comments: Comment[];
 }
 
+export interface NewSubComment extends Comment {
+  parentId: number;
+}
+
 export const GET_POST = gql`
   query getPost($id: ID!, $commentPaging: CommentPagingInput!) {
     getPost(id: $id, commentPaging: $commentPaging) {

@@ -9,10 +9,13 @@ import {
   Comment,
   CREATE_COMMENT,
   DELETE_COMMENT,
+  CREATE_SUBCOMMENT,
+  NewSubComment,
 } from '@queries/post';
 import COLOR from '@styles/colors';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
+import SubCommentList from './SubCommentList';
 
 interface Props {
   postId: number;
@@ -21,7 +24,7 @@ interface Props {
 }
 
 const CommentList = ({ postId, commetCount, initialComments }: Props) => {
-  const initialLastId = Number(initialComments[initialComments.length - 1]?.id);
+  const initialLastId = initialComments[initialComments.length - 1]?.id;
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [lastId, setLastId] = useState<number | undefined>(
     initialLastId || undefined,
@@ -53,7 +56,7 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
       },
     });
     const newComments = data.getPost.comments;
-    const updatedLastId = Number(newComments[newComments.length - 1]?.id);
+    const updatedLastId = newComments[newComments.length - 1]?.id;
     setComments(prev => prev.concat(newComments));
     if (updatedLastId) {
       setLastId(updatedLastId);
@@ -79,6 +82,11 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
   const [createComment] = useMutation<{ createComment: Comment }>(
     CREATE_COMMENT,
   );
+  const [createSubComment] = useMutation<{ createSubComment: Comment }>(
+    CREATE_SUBCOMMENT,
+  );
+  const [subNewComments, setNewSubComments] = useState<NewSubComment[]>([]);
+
   const [deleteComment] = useMutation(DELETE_COMMENT);
   const handleClickDeleteComment = async (commentId: number) => {
     await deleteComment({ variables: { id: commentId } });
@@ -102,16 +110,36 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
 
   const handleClickSubmit = async () => {
     if (inputValue !== '') {
-      const result = await createComment({
-        variables: {
-          postId,
-          description: inputValue,
-        },
-      });
-      if (result.data) {
-        const newCommentData = result.data.createComment || {};
-        setComments(prev => [newCommentData, ...prev]);
-        resetValue();
+      if (parentComment) {
+        const result = await createSubComment({
+          variables: {
+            postId,
+            parentId: parentComment.id,
+            description: inputValue,
+          },
+        });
+
+        if (result.data) {
+          const newSubCommentData = result.data.createSubComment || {};
+          setNewSubComments(prev => [
+            { ...newSubCommentData, parentId: parentComment.id },
+            ...prev,
+          ]);
+          resetValue();
+          setParentComment(null);
+        }
+      } else {
+        const result = await createComment({
+          variables: {
+            postId,
+            description: inputValue,
+          },
+        });
+        if (result.data) {
+          const newCommentData = result.data.createComment || {};
+          setComments(prev => [newCommentData, ...prev]);
+          resetValue();
+        }
       }
     }
   };
@@ -119,7 +147,15 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
   return (
     <>
       {comments.map(comment => {
-        const { id } = comment;
+        const { id, subCommentCount } = comment;
+        const targetSubCommentList = subNewComments.filter(
+          subComment => Number(subComment.parentId) === Number(id),
+        );
+        const totalSubCommentCount =
+          subCommentCount + targetSubCommentList.length;
+        const isShowSubCommentList =
+          subCommentCount > 0 || targetSubCommentList.length > 0;
+
         return (
           <List
             id={`comment-${id}`}
@@ -128,10 +164,17 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
           >
             <CommentItem
               {...comment}
-              id={Number(comment.id)}
               handleClickReply={handleClickReply}
               handleClickDeleteComment={handleClickDeleteComment}
             />
+
+            {isShowSubCommentList && (
+              <SubCommentList
+                commentId={id}
+                count={totalSubCommentCount}
+                subNewComments={targetSubCommentList}
+              />
+            )}
           </List>
         );
       })}
