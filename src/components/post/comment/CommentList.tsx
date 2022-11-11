@@ -91,7 +91,7 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
   const handleClickDeleteComment = async (commentId: number) => {
     await deleteComment({ variables: { id: commentId } });
     const updatedCommentList = comments.filter(
-      comment => Number(comment.id) !== commentId,
+      comment => Number(comment.id) !== Number(commentId),
     );
     setComments(updatedCommentList);
   };

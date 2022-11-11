@@ -29,7 +29,9 @@ const FeedList = ({ initialPosts }: Props) => {
   const [deletePost] = useMutation(DELETE_POST);
   const handleClickDeletePost = async (postId: number) => {
     await deletePost({ variables: { id: postId } });
-    const updatedPostList = posts.filter(post => Number(post.id) !== postId);
+    const updatedPostList = posts.filter(
+      post => Number(post.id) !== Number(postId),
+    );
     setPosts(updatedPostList);
   };
 
