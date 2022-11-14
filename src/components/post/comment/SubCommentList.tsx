@@ -14,10 +14,10 @@ import SubCommentItem from './SubCommentItem';
 interface Props {
   commentId: number;
   count: number;
-  subNewComments: NewSubComment[];
+  newSubComment: NewSubComment | null;
 }
 
-const SubCommentList = ({ commentId, count, subNewComments }: Props) => {
+const SubCommentList = ({ commentId, count = 0, newSubComment }: Props) => {
   const [isShowSubComments, setIsShowSubComment] = useState<boolean>(false);
   const { fetchMore, data } = useQuery<{ getSubComments: Comment[] }>(
     GET_COMMENTS,
@@ -30,15 +30,12 @@ const SubCommentList = ({ commentId, count, subNewComments }: Props) => {
       },
     },
   );
-  const [subComments, setSubComments] = useState<Comment[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(count);
+  const [subComments, setSubComments] = useState<Comment[]>(
+    data?.getSubComments || [],
+  );
   const [lastId, setLastId] = useState<number | undefined>(undefined);
   const [isEndData, setIsEndData] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (subComments.length >= count) {
-      setIsEndData(true);
-    }
-  }, [count, subComments]);
 
   useEffect(() => {
     const subCommentsData: Comment[] = data?.getSubComments || [];
@@ -48,11 +45,19 @@ const SubCommentList = ({ commentId, count, subNewComments }: Props) => {
   }, [data]);
 
   useEffect(() => {
-    if (subNewComments.length > 0) {
-      setSubComments(subNewComments);
+    if (newSubComment) {
+      setSubComments(prev => [newSubComment, ...prev]);
+      setTotalCount(totalCount + 1);
       setIsShowSubComment(true);
     }
-  }, [subNewComments]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newSubComment]);
+
+  useEffect(() => {
+    if (subComments.length >= totalCount) {
+      setIsEndData(true);
+    }
+  }, [totalCount, subComments]);
 
   const handleClickShowSubComments = async () => {
     setIsShowSubComment(true);
@@ -90,6 +95,7 @@ const SubCommentList = ({ commentId, count, subNewComments }: Props) => {
       handleClickHideButton();
     }
     setSubComments(updatedSubCommentList);
+    setTotalCount(totalCount - 1);
   };
 
   return subComments.length > 0 ? (
@@ -97,7 +103,7 @@ const SubCommentList = ({ commentId, count, subNewComments }: Props) => {
       {!isShowSubComments ? (
         <LineWithTextButton
           sx={{ padding: '10px 0 0 46px' }}
-          buttonText={`답글 ${subComments.length}개 더 보기`}
+          buttonText={`답글 ${totalCount}개 더 보기`}
           handleClick={handleClickShowSubComments}
         />
       ) : (

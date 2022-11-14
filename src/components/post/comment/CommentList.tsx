@@ -85,7 +85,9 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
   const [createSubComment] = useMutation<{ createSubComment: Comment }>(
     CREATE_SUBCOMMENT,
   );
-  const [subNewComments, setNewSubComments] = useState<NewSubComment[]>([]);
+  const [newSubComment, setNewSubComment] = useState<NewSubComment | null>(
+    null,
+  );
 
   const [deleteComment] = useMutation(DELETE_COMMENT);
   const handleClickDeleteComment = async (commentId: number) => {
@@ -120,11 +122,15 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
         });
 
         if (result.data) {
-          const newSubCommentData = result.data.createSubComment || {};
-          setNewSubComments(prev => [
-            { ...newSubCommentData, parentId: parentComment.id },
-            ...prev,
-          ]);
+          const newSubCommentData = result.data.createSubComment;
+          setNewSubComment(
+            newSubCommentData
+              ? {
+                  ...newSubCommentData,
+                  parentId: parentComment.id,
+                }
+              : null,
+          );
           resetValue();
           setParentComment(null);
         }
@@ -148,13 +154,11 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
     <>
       {comments.map(comment => {
         const { id, subCommentCount } = comment;
-        const targetSubCommentList = subNewComments.filter(
-          subComment => Number(subComment.parentId) === Number(id),
-        );
-        const totalSubCommentCount =
-          subCommentCount + targetSubCommentList.length;
-        const isShowSubCommentList =
-          subCommentCount > 0 || targetSubCommentList.length > 0;
+        const targetSubComment =
+          newSubComment && Number(newSubComment.parentId) === Number(id)
+            ? newSubComment
+            : null;
+        const isShowSubCommentList = subCommentCount > 0 || newSubComment;
 
         return (
           <List
@@ -171,8 +175,8 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
             {isShowSubCommentList && (
               <SubCommentList
                 commentId={id}
-                count={totalSubCommentCount}
-                subNewComments={targetSubCommentList}
+                count={subCommentCount}
+                newSubComment={targetSubComment}
               />
             )}
           </List>
