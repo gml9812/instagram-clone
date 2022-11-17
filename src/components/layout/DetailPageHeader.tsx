@@ -1,4 +1,4 @@
-import { Box, Container, IconButton } from '@mui/material';
+import { Box, Container, IconButton, AppBar } from '@mui/material';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import COLOR from '@styles/colors';
 import React from 'react';
@@ -14,7 +14,8 @@ const DetailPageHeader = ({ pageName }: Props) => {
   const router = useRouter();
   return (
     <>
-      <Box
+      <AppBar
+        elevation={0}
         sx={{
           position: 'fixed',
           zIndex: 9999,
@@ -47,7 +48,7 @@ const DetailPageHeader = ({ pageName }: Props) => {
         >
           {pageName}
         </Box>
-      </Box>
+      </AppBar>
       <Container sx={{ height: `${DETAIL_HEADER_HEIGHT}px` }} />
     </>
   );
