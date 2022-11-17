@@ -47,11 +47,13 @@ const FeedImage = ({ imageList }: Props): ReactElement => {
               <SwiperSlide key={`image-${image.id}`}>
                 <Box
                   sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     position: 'relative',
-                    width: `100%`,
+                    width: '100%',
                     height: 'auto',
                     background: COLOR.LIGHTGREY,
-                    aspectRatio: `${image.width} / ${image.height}`,
+                    aspectRatio: '1 / 1',
                   }}
                 >
                   <Image
