@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import COLOR from '@styles/colors';
-import { Container, Box } from '@mui/material';
+import { Container, Box, AppBar } from '@mui/material';
 
 interface Props {
   headerIcon: JSX.Element | undefined;
@@ -38,11 +38,12 @@ const CustomHeader = ({
 
   return (
     <>
-      <Box
+      <AppBar
+        elevation={0}
         sx={{
           position: 'fixed',
-          zIndex: 9999,
           display: 'flex',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
           boxSizing: 'border-box',
@@ -60,7 +61,7 @@ const CustomHeader = ({
           {leftButton}
           {rightButton}
         </Box>
-      </Box>
+      </AppBar>
       <Container sx={{ height: `${HEADER_HEIGHT}px` }} />
     </>
   );
