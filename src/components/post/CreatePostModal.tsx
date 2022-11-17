@@ -21,10 +21,10 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Slide from '@mui/material/Slide';
-// import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useMutation } from '@apollo/client';
 import { CREATE_POST } from 'src/queries/post';
 import { TransitionProps } from '@mui/material/transitions';
@@ -173,8 +173,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
                 sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                 onClick={handleClose}
               >
-                {/* <CloseIcon fontSize="large" /> */}
-                abcd
+                <CloseIcon fontSize="large" />
               </Box>
               <Typography
                 variant="h5"
@@ -268,8 +267,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
               onClick={() => setStep('choosePhoto')}
             >
-              {/* <ArrowBackIosNewIcon fontSize="large" /> */}
-              abcd
+              <ArrowBackIosNewIcon fontSize="large" />
             </Box>
             <Typography
               variant="h5"
@@ -349,7 +347,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
 
         <Accordion sx={{ marginBottom: '10px' }}>
           <AccordionSummary
-            // expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
@@ -366,7 +364,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
 
         <Accordion>
           <AccordionSummary
-            // expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
