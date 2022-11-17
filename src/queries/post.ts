@@ -47,6 +47,21 @@ export const GET_POSTS = gql`
   }
 `;
 
+export const CREATE_POST = gql`
+  mutation createPost($post: PostInput) {
+    createPost(post: $post) {
+      id
+      user {
+        id
+        nickname
+        name
+      }
+      description
+      createdAt
+    }
+  }
+`;
+
 export const DEFAULT_COMMENT_SIZE = 10;
 export const DEFAULT_SUBCOMMENT_SIZE = 3;
 
