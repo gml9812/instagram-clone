@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import LineWithTextButton from '@components/template/LineWithTextButton';
-import { useQuery } from '@apollo/client';
-import { DEFAULT_SUBCOMMENT_SIZE, GET_COMMENTS, Comment } from '@queries/post';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  DEFAULT_SUBCOMMENT_SIZE,
+  GET_COMMENTS,
+  Comment,
+  NewSubComment,
+  DELETE_COMMENT,
+} from '@queries/post';
 import { Box, List } from '@mui/material';
 import SubCommentItem from './SubCommentItem';
 
 interface Props {
   commentId: number;
   count: number;
-  handleClickReply: (comment: Comment) => void;
+  newSubComment: NewSubComment | null;
 }
 
-const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
+const SubCommentList = ({ commentId, count = 0, newSubComment }: Props) => {
   const [isShowSubComments, setIsShowSubComment] = useState<boolean>(false);
   const { fetchMore, data } = useQuery<{ getSubComments: Comment[] }>(
     GET_COMMENTS,
@@ -24,22 +30,38 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
       },
     },
   );
-  const [subComments, setSubComments] = useState<Comment[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(count);
+  const [subComments, setSubComments] = useState<Comment[]>(
+    data?.getSubComments || [],
+  );
   const [lastId, setLastId] = useState<number | undefined>(undefined);
   const [isEndData, setIsEndData] = useState<boolean>(false);
-
-  const handleClickShowSubComments = async () => {
-    setIsShowSubComment(true);
-  };
 
   useEffect(() => {
     const subCommentsData: Comment[] = data?.getSubComments || [];
     setSubComments(subCommentsData);
-    const updatedLastId = Number(
-      subCommentsData[subCommentsData.length - 1]?.id,
-    );
+    const updatedLastId = subCommentsData[subCommentsData.length - 1]?.id;
     setLastId(updatedLastId || undefined);
   }, [data]);
+
+  useEffect(() => {
+    if (newSubComment) {
+      setSubComments(prev => [newSubComment, ...prev]);
+      setTotalCount(totalCount + 1);
+      setIsShowSubComment(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newSubComment]);
+
+  useEffect(() => {
+    if (subComments.length >= totalCount) {
+      setIsEndData(true);
+    }
+  }, [totalCount, subComments]);
+
+  const handleClickShowSubComments = async () => {
+    setIsShowSubComment(true);
+  };
 
   const handleClickMoreButton = async () => {
     const result = await fetchMore({
@@ -63,18 +85,25 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
     setIsShowSubComment(false);
   };
 
-  useEffect(() => {
-    if (subComments.length >= count) {
-      setIsEndData(true);
+  const [deleteComment] = useMutation(DELETE_COMMENT);
+  const handleClickDeleteSubComment = async (subCommentId: number) => {
+    await deleteComment({ variables: { id: subCommentId } });
+    const updatedSubCommentList = subComments.filter(
+      subComment => Number(subComment.id) !== Number(subCommentId),
+    );
+    if (updatedSubCommentList.length === 0) {
+      handleClickHideButton();
     }
-  }, [count, subComments]);
+    setSubComments(updatedSubCommentList);
+    setTotalCount(totalCount - 1);
+  };
 
-  return (
+  return subComments.length > 0 ? (
     <Box>
       {!isShowSubComments ? (
         <LineWithTextButton
           sx={{ padding: '10px 0 0 46px' }}
-          buttonText={`답글 ${count}개 더 보기`}
+          buttonText={`답글 ${totalCount}개 더 보기`}
           handleClick={handleClickShowSubComments}
         />
       ) : (
@@ -85,7 +114,7 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
               <List id={`subComment-${id}`} key={`subComment-${id}`}>
                 <SubCommentItem
                   {...subComment}
-                  handleClickReply={() => handleClickReply(subComment)}
+                  handleClickDeleteSubComment={handleClickDeleteSubComment}
                 />
               </List>
             );
@@ -101,6 +130,8 @@ const SubCommentList = ({ commentId, count, handleClickReply }: Props) => {
         </Box>
       )}
     </Box>
+  ) : (
+    <div />
   );
 };
 

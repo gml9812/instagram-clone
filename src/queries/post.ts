@@ -17,7 +17,7 @@ export interface Post {
   commentCount: number;
   isLike: boolean;
   isMine: boolean;
-  modifiedAt: string;
+  createdAt: string;
 }
 
 export const DEFAULT_POST_SIZE = 10;
@@ -41,7 +41,8 @@ export const GET_POSTS = gql`
       likeCount
       commentCount
       isLike
-      modifiedAt
+      isMine
+      createdAt
     }
   }
 `;
@@ -71,11 +72,16 @@ export interface Comment {
   createdAt: string;
   isLike: boolean;
   isMine: boolean;
+  likeCount: number;
   subCommentCount: number;
 }
 
 export interface PostWithComment extends Post {
   comments: Comment[];
+}
+
+export interface NewSubComment extends Comment {
+  parentId: number;
 }
 
 export const GET_POST = gql`
@@ -88,7 +94,7 @@ export const GET_POST = gql`
         profileImage
       }
       description
-      modifiedAt
+      createdAt
       commentCount
       comments {
         id
@@ -100,10 +106,17 @@ export const GET_POST = gql`
         description
         subCommentCount
         isLike
+        likeCount
         isMine
         createdAt
       }
     }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation deletePost($id: ID!) {
+    deletePost(id: $id)
   }
 `;
 
@@ -118,6 +131,7 @@ export const GET_COMMENTS = gql`
       }
       description
       isLike
+      likeCount
       isMine
       createdAt
     }
@@ -135,6 +149,7 @@ export const CREATE_COMMENT = gql`
       }
       description
       isLike
+      likeCount
       isMine
       createdAt
     }
@@ -166,6 +181,7 @@ export const CREATE_SUBCOMMENT = gql`
       }
       description
       isLike
+      likeCount
       isMine
       createdAt
     }

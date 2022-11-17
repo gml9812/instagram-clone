@@ -53,17 +53,15 @@ const PostPage = () => {
             <PostContent
               user={initialPost.user}
               description={initialPost.description}
-              modifiedAt={initialPost.modifiedAt}
+              createdAt={initialPost.createdAt}
             />
           </Box>
 
-          {initialPost.comments.length > 0 && (
-            <CommentList
-              postId={postId}
-              commetCount={initialPost.commentCount}
-              initialComments={initialPost.comments}
-            />
-          )}
+          <CommentList
+            postId={postId}
+            commetCount={initialPost.commentCount}
+            initialComments={initialPost.comments}
+          />
         </>
       )}
     </>
