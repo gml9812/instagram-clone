@@ -49,78 +49,7 @@ const ProfilePage: NextPage = () => {
         followCount={0}
         followerCount={0}
       />
-      <ProfilePosts
-        posts={
-          /* data?.getUser.posts */ [
-            {
-              commentCount: 0,
-              createdAt: '2022-11-17T05:40:23',
-              description: 'df',
-              id: 25,
-              isLike: false,
-              isMine: true,
-              likeCount: 0,
-              medias: [
-                {
-                  height: 1160,
-                  id: 22,
-                  url: 'https://image.ggumim.co.kr/image/r/600/storage/c5d41a42-f75a-4922-a2ff-42ac11f4b0c2.jpg',
-                  width: 1170,
-                },
-              ],
-              user: {
-                id: 10,
-                nickname: 'homer',
-                profileImage: '',
-              },
-            },
-            {
-              commentCount: 0,
-              createdAt: '2022-11-17T05:40:23',
-              description: 'df',
-              id: 25,
-              isLike: false,
-              isMine: true,
-              likeCount: 0,
-              medias: [
-                {
-                  height: 1160,
-                  id: 22,
-                  url: 'https://image.ggumim.co.kr/image/r/600/storage/c5d41a42-f75a-4922-a2ff-42ac11f4b0c2.jpg',
-                  width: 1170,
-                },
-              ],
-              user: {
-                id: 10,
-                nickname: 'homer',
-                profileImage: '',
-              },
-            },
-            {
-              commentCount: 0,
-              createdAt: '2022-11-17T05:40:23',
-              description: 'df',
-              id: 25,
-              isLike: false,
-              isMine: true,
-              likeCount: 0,
-              medias: [
-                {
-                  height: 1160,
-                  id: 22,
-                  url: 'https://image.ggumim.co.kr/image/r/600/storage/c5d41a42-f75a-4922-a2ff-42ac11f4b0c2.jpg',
-                  width: 1170,
-                },
-              ],
-              user: {
-                id: 10,
-                nickname: 'homer',
-                profileImage: '',
-              },
-            },
-          ]
-        }
-      />
+      <ProfilePosts posts={data?.getUser.posts} />
     </>
   );
 };
