@@ -10,7 +10,7 @@ const CssButton = styled(Button)({
 
 const TextButton = ({ sx, children, onClick }: ButtonProps) => {
   return (
-    <CssButton sx={{ ...sx }} onClick={onClick}>
+    <CssButton sx={{ minWidth: 'max-content', ...sx }} onClick={onClick}>
       {children}
     </CssButton>
   );

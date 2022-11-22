@@ -100,7 +100,6 @@ const CommentItem = ({
             {!!likeState.count && (
               <TextButton
                 sx={{
-                  minWidth: 'max-content',
                   margin: '0 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',
@@ -114,7 +113,6 @@ const CommentItem = ({
 
             <TextButton
               sx={{
-                minWidth: 'max-content',
                 margin: '0 0 0 18px',
                 padding: 0,
                 fontSize: '1rem',
@@ -129,7 +127,6 @@ const CommentItem = ({
             {isMine && (
               <TextButton
                 sx={{
-                  minWidth: 'max-content',
                   margin: '0 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',
