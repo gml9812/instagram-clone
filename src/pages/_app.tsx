@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { GlobalStyle } from 'src/styles/GlobalStyle';
 import { authClient } from '@apollo/apolloClient';
 import { ApolloProvider } from '@apollo/client';
+import { RecoilRoot } from 'recoil';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
@@ -13,7 +14,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </Head>
       <GlobalStyle />
       <ApolloProvider client={authClient}>
-        <Component {...pageProps} />
+        <RecoilRoot>
+          <Component {...pageProps} />
+        </RecoilRoot>
       </ApolloProvider>
     </>
   );

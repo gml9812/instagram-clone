@@ -13,12 +13,9 @@ import { useMutation } from '@apollo/client';
 import { LOGIN_MUTATION, LoginUser } from 'src/queries/auth';
 import { CookiesName } from '@libs/values';
 import { parseCookies } from 'nookies';
-import {
-  getRefreshToken,
-  setAccessToken,
-  setRefreshToken,
-  setUser,
-} from '@libs/token';
+import { getRefreshToken, setAccessToken, setRefreshToken } from '@libs/token';
+import { useSetRecoilState } from 'recoil';
+import { userState } from 'src/recoil/userAtom';
 
 export interface LoginState {
   email: string;
@@ -30,6 +27,8 @@ export interface LoginState {
 const Login: NextPage = () => {
   const router = useRouter();
   const cookies = parseCookies();
+
+  const setUser = useSetRecoilState(userState);
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -82,12 +81,12 @@ const Login: NextPage = () => {
     const backUrl = cookies[CookiesName.backUrl] || '/';
     if (data) {
       const { accessToken, refreshToken, user } = data.login;
-      setUser(user);
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
+      setUser({ ...user, isLogin: true });
       router.push(backUrl);
     }
-  }, [cookies, data, router]);
+  }, [cookies, data, router, setUser]);
 
   useEffect(() => {
     if (error) {
