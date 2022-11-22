@@ -10,8 +10,40 @@ import FeedList from '@components/feed/FeedList';
 import { useQuery } from '@apollo/client';
 import { getRefreshToken } from '@libs/token';
 import { GetServerSidePropsContext } from 'next';
+// import { wsClient, wsConnect, wsDisconnect } from 'src/stomp/stompClient';
+import { useRouter } from 'next/router';
+import { parseCookies } from 'nookies';
+import { CookiesName } from '@libs/values';
+import { User } from '@queries/auth';
 
 const Home = () => {
+  const router = useRouter();
+
+  const cookies = parseCookies();
+  const user = cookies[CookiesName.user];
+  const [loggedInUser, setLoggedInUser] = useState<User>({
+    id: 0,
+    nickname: '',
+    profileImage: '',
+  });
+
+  useEffect(() => {
+    if (user) {
+      setLoggedInUser(JSON.parse(user));
+    }
+  }, [user]);
+
+  // const wsSubscribe = () => {
+  //   wsClient.subscribe('/sub/notification', res => {
+  //     console.log('res', res.body);
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   wsConnect(wsSubscribe);
+  //   return () => wsDisconnect();
+  // }, []);
+
   const [initialPosts, setInitialPosts] = useState<Post[]>([]);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
   const [fileList, setFileList] = useState<FileList>();
@@ -58,7 +90,11 @@ const Home = () => {
           </IconButton>
         }
         rightButton={
-          <IconButton>
+          <IconButton
+            onClick={() =>
+              loggedInUser.id && router.push(`/user/${loggedInUser.id}`)
+            }
+          >
             <AccountIcon />
           </IconButton>
         }
