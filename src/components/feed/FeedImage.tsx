@@ -57,6 +57,7 @@ const FeedImage = ({ imageList }: Props): ReactElement => {
                   }}
                 >
                   <Image
+                    priority
                     src={`${image.url}`}
                     alt=""
                     layout="fill"
