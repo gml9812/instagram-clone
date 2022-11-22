@@ -20,8 +20,18 @@ const Home = () => {
   const router = useRouter();
 
   const cookies = parseCookies();
-  const userJson = cookies[CookiesName.user];
-  const user: User = userJson ? JSON.parse(userJson) : null;
+  const user = cookies[CookiesName.user];
+  const [loggedInUser, setLoggedInUser] = useState<User>({
+    id: 0,
+    nickname: '',
+    profileImage: '',
+  });
+
+  useEffect(() => {
+    if (user) {
+      setLoggedInUser(JSON.parse(user));
+    }
+  }, [user]);
 
   // const wsSubscribe = () => {
   //   wsClient.subscribe('/sub/notification', res => {
@@ -80,7 +90,11 @@ const Home = () => {
           </IconButton>
         }
         rightButton={
-          <IconButton onClick={() => user && router.push(`/user/${user.id}`)}>
+          <IconButton
+            onClick={() =>
+              loggedInUser.id && router.push(`/user/${loggedInUser.id}`)
+            }
+          >
             <AccountIcon />
           </IconButton>
         }
