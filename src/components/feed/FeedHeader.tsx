@@ -5,6 +5,7 @@ import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import { User } from '@queries/auth';
 import TextButton from '@components/template/TextButton';
 import ProfileButton from '@components/template/ProfileButton';
+import { useRouter } from 'next/router';
 import FeedAccordion from './FeedAccordion';
 
 interface Props {
@@ -20,6 +21,7 @@ const FeedHeader = ({
   isMine,
   handleClickDeletePost,
 }: Props): ReactElement => {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isOpen = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLElement>) => {
@@ -27,6 +29,9 @@ const FeedHeader = ({
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleProfileClick = () => {
+    router.push(`/${user.id}`);
   };
 
   return (
@@ -46,6 +51,7 @@ const FeedHeader = ({
           width: '100%',
           padding: 0,
         }}
+        onClick={handleProfileClick}
       >
         <ProfileButton
           profileImage={user.profileImage}
@@ -59,7 +65,7 @@ const FeedHeader = ({
           sx={{
             display: 'flex',
             justifyContent: 'start',
-            padding: 0,
+            padding: '0 4px',
             fontSize: '1.1rem',
             fontWeight: 700,
             color: COLOR.CHARCOAL,
@@ -76,6 +82,7 @@ const FeedHeader = ({
 
       <FeedAccordion
         postId={postId}
+        userId={user.id}
         isOpen={isOpen}
         isMine={isMine}
         anchorEl={anchorEl}

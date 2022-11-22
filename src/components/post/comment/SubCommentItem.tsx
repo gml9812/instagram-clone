@@ -89,7 +89,6 @@ const SubCommentItem = ({
             {!!likeState.count && (
               <TextButton
                 sx={{
-                  minWidth: 'max-content',
                   margin: '0 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',
@@ -105,7 +104,6 @@ const SubCommentItem = ({
             {isMine && (
               <TextButton
                 sx={{
-                  minWidth: 'max-content',
                   margin: '-1px 0 0 18px',
                   padding: 0,
                   fontSize: '1rem',

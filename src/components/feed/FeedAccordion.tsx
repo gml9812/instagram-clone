@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 
 interface Props {
   postId: number;
+  userId: number;
   isOpen: boolean;
   isMine: boolean;
   anchorEl: HTMLElement | null;
@@ -55,6 +56,7 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const FeedAccordion = ({
   postId,
+  userId,
   isOpen,
   isMine,
   anchorEl,
@@ -62,7 +64,6 @@ const FeedAccordion = ({
   handleClickDeletePost,
 }: Props) => {
   const router = useRouter();
-
   return (
     <StyledMenu
       anchorEl={anchorEl}
@@ -98,7 +99,13 @@ const FeedAccordion = ({
         </ul>
       ) : (
         <ul>
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              router.push(`/user/${userId}`);
+            }}
+            disableRipple
+          >
             <AccountBoxRoundedIcon />
             프로필 보기
           </MenuItem>

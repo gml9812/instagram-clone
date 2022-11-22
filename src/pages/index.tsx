@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, IconButton, Popover, Button, ButtonGroup } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import CustomHeader from '@components/layout/CustomHeader';
 import CreatePostModal from '@components/post/CreatePostModal';
 import Logo from '@icons/Logo';
@@ -8,17 +8,11 @@ import AccountIcon from '@icons/AccountIcon';
 import { GET_POSTS, Post, DEFAULT_POST_SIZE } from '@queries/post';
 import FeedList from '@components/feed/FeedList';
 import { useQuery } from '@apollo/client';
-import ViewCompactOutlinedIcon from '@mui/icons-material/ViewCompactOutlined';
-import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
 import { getRefreshToken } from '@libs/token';
 import { GetServerSidePropsContext } from 'next';
 
-
 const Home = () => {
   const [initialPosts, setInitialPosts] = useState<Post[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null,
-  );
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
   const [fileList, setFileList] = useState<FileList>();
   const { data } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
@@ -27,6 +21,7 @@ const Home = () => {
         size: DEFAULT_POST_SIZE,
       },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +29,6 @@ const Home = () => {
       setFileList(event.target.files);
     }
     setOpenCreatePostModal(true);
-    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -52,51 +46,16 @@ const Home = () => {
           </Box>
         }
         leftButton={
-          <>
-            <IconButton
-              sx={{ margin: '0 6px 0 0' }}
-              onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
-                setAnchorEl(event.currentTarget);
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-            <Popover
-              open={Boolean(anchorEl)}
-              anchorEl={anchorEl}
-              onClose={() => {
-                setAnchorEl(null);
-              }}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-            >
-              <ButtonGroup orientation="vertical" variant="text">
-                <Button
-                  component="label"
-                  sx={{ fontSize: '14px', color: 'black' }}
-                  endIcon={<ViewCompactOutlinedIcon />}
-                >
-                  게시물
-                  <input
-                    hidden
-                    accept="image/*"
-                    multiple
-                    type="file"
-                    onChange={onFileUpload}
-                  />
-                </Button>
-                <Button
-                  component="label"
-                  sx={{ fontSize: '14px', color: 'black' }}
-                  endIcon={<ControlPointOutlinedIcon />}
-                >
-                  스토리
-                </Button>
-              </ButtonGroup>
-            </Popover>
-          </>
+          <IconButton sx={{ margin: '0 6px 0 0' }} component="label">
+            <AddIcon />
+            <input
+              hidden
+              accept="image/*"
+              multiple
+              type="file"
+              onChange={onFileUpload}
+            />
+          </IconButton>
         }
         rightButton={
           <IconButton>
