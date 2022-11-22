@@ -117,7 +117,6 @@ const CommentInput = ({
                   sx={{
                     margin: 0,
                     padding: 0,
-                    minWidth: 'max-content',
                     fontSize: '1.2rem',
                     color: COLOR.BLUE.MAIN,
                   }}

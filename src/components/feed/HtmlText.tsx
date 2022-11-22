@@ -22,7 +22,7 @@ const TextWrapper = styled(Box)`
 
 const HtmlText = ({ sx, nickname, description, showAllDescription }: Props) => {
   const [showMoreButton, setShowMoreButton] = useState<boolean>(
-    !showAllDescription && description.length >= 15,
+    !showAllDescription && description.length > 20,
   );
 
   const handleClickMoreButton = () => {

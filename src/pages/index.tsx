@@ -21,6 +21,7 @@ const Home = () => {
         size: DEFAULT_POST_SIZE,
       },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {

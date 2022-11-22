@@ -65,7 +65,7 @@ const FeedHeader = ({
           sx={{
             display: 'flex',
             justifyContent: 'start',
-            padding: 0,
+            padding: '0 4px',
             fontSize: '1.1rem',
             fontWeight: 700,
             color: COLOR.CHARCOAL,
@@ -82,6 +82,7 @@ const FeedHeader = ({
 
       <FeedAccordion
         postId={postId}
+        userId={user.id}
         isOpen={isOpen}
         isMine={isMine}
         anchorEl={anchorEl}
