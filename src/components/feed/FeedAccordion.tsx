@@ -5,9 +5,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
 import COLOR from '@styles/colors';
+import { useRouter } from 'next/router';
 
 interface Props {
   postId: number;
+  userId: number;
   isOpen: boolean;
   isMine: boolean;
   anchorEl: HTMLElement | null;
@@ -54,12 +56,14 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const FeedAccordion = ({
   postId,
+  userId,
   isOpen,
   isMine,
   anchorEl,
   handleClose,
   handleClickDeletePost,
 }: Props) => {
+  const router = useRouter();
   return (
     <StyledMenu
       anchorEl={anchorEl}
@@ -95,12 +99,24 @@ const FeedAccordion = ({
         </ul>
       ) : (
         <ul>
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={() => {
+              router.push(`/user/${userId}`);
+              handleClose();
+            }}
+            disableRipple
+          >
             <AccountBoxRoundedIcon />
             프로필 보기
           </MenuItem>
           <Divider sx={{ margin: 0 }} />
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={() => {
+              router.push(`/post/${postId}`);
+              handleClose();
+            }}
+            disableRipple
+          >
             <CommentRoundedIcon />
             댓글 달기
           </MenuItem>
