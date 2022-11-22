@@ -28,6 +28,7 @@ const SubCommentList = ({ commentId, count = 0, newSubComment }: Props) => {
           size: DEFAULT_SUBCOMMENT_SIZE,
         },
       },
+      fetchPolicy: 'no-cache',
     },
   );
   const [totalCount, setTotalCount] = useState<number>(count);

@@ -25,6 +25,7 @@ const FeedList = ({ initialPosts }: Props) => {
         lastId,
       },
     },
+    fetchPolicy: 'no-cache',
   });
   const [deletePost] = useMutation(DELETE_POST);
   const handleClickDeletePost = async (postId: number) => {
