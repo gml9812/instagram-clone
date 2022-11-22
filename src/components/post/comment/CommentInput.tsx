@@ -1,14 +1,13 @@
-import React, { ChangeEvent, RefObject, useEffect, useState } from 'react';
+import React, { ChangeEvent, RefObject } from 'react';
 import RoundedInput from '@components/template/RoundedInput';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import COLOR from '@styles/colors';
 import ProfileButton from '@components/template/ProfileButton';
-import { parseCookies } from 'nookies';
-import { CookiesName } from '@libs/values';
-import { User } from '@queries/auth';
 import { Comment } from '@queries/post';
+import { useRecoilValue } from 'recoil';
+import { UserAtomState, userState } from 'src/recoil/userAtom';
 
 interface Props {
   inputRef: RefObject<HTMLInputElement> | null;
@@ -27,19 +26,7 @@ const CommentInput = ({
   handleChangeInput,
   handleClickSubmit,
 }: Props) => {
-  const cookies = parseCookies();
-  const user = cookies[CookiesName.user];
-  const [loggedInUser, setLoggedInUser] = useState<User>({
-    id: 0,
-    nickname: '',
-    profileImage: '',
-  });
-
-  useEffect(() => {
-    if (user) {
-      setLoggedInUser(JSON.parse(user));
-    }
-  }, [user]);
+  const user: UserAtomState = useRecoilValue(userState);
 
   return (
     <>
@@ -94,9 +81,7 @@ const CommentInput = ({
         >
           <ProfileButton
             profileImage={
-              loggedInUser.profileImage !== ''
-                ? loggedInUser.profileImage
-                : undefined
+              user.profileImage !== '' ? user.profileImage : undefined
             }
             sx={{ margin: '0 2px 0 0' }}
             size={45}

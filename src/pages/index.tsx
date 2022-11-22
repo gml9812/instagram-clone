@@ -12,26 +12,12 @@ import { getRefreshToken } from '@libs/token';
 import { GetServerSidePropsContext } from 'next';
 // import { wsClient, wsConnect, wsDisconnect } from 'src/stomp/stompClient';
 import { useRouter } from 'next/router';
-import { parseCookies } from 'nookies';
-import { CookiesName } from '@libs/values';
-import { User } from '@queries/auth';
+import { useRecoilValue } from 'recoil';
+import { UserAtomState, userState } from 'src/recoil/userAtom';
 
 const Home = () => {
   const router = useRouter();
-
-  const cookies = parseCookies();
-  const user = cookies[CookiesName.user];
-  const [loggedInUser, setLoggedInUser] = useState<User>({
-    id: 0,
-    nickname: '',
-    profileImage: '',
-  });
-
-  useEffect(() => {
-    if (user) {
-      setLoggedInUser(JSON.parse(user));
-    }
-  }, [user]);
+  const user: UserAtomState = useRecoilValue(userState);
 
   // const wsSubscribe = () => {
   //   wsClient.subscribe('/sub/notification', res => {
@@ -91,9 +77,11 @@ const Home = () => {
         }
         rightButton={
           <IconButton
-            onClick={() =>
-              loggedInUser.id && router.push(`/user/${loggedInUser.id}`)
-            }
+            onClick={() => {
+              if (user.isLogin) {
+                router.push(`/user/${user.id}`);
+              }
+            }}
           >
             <AccountIcon />
           </IconButton>
