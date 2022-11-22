@@ -20,6 +20,7 @@ const PostPage = () => {
       id: postId,
       commentPaging: { size: DEFAULT_COMMENT_SIZE },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const getPost = useCallback(async () => {

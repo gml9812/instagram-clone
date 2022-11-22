@@ -39,6 +39,7 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
         lastId,
       },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const onInfiniteScroll = async () => {
