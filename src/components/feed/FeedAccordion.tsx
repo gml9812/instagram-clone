@@ -101,8 +101,8 @@ const FeedAccordion = ({
         <ul>
           <MenuItem
             onClick={() => {
-              router.push(`/user/${userId}`);
               handleClose();
+              router.push(`/user/${userId}`);
             }}
             disableRipple
           >
@@ -112,8 +112,8 @@ const FeedAccordion = ({
           <Divider sx={{ margin: 0 }} />
           <MenuItem
             onClick={() => {
-              router.push(`/post/${postId}`);
               handleClose();
+              router.push(`/post/${postId}`);
             }}
             disableRipple
           >

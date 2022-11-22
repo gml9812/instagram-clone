@@ -8,6 +8,7 @@ import LikeIcon from '@icons/LikeIcon';
 import ProfileButton from '@components/template/ProfileButton';
 import HtmlText from '@components/feed/HtmlText';
 import { useMutation } from '@apollo/client';
+import { useRouter } from 'next/router';
 
 interface Props extends Comment {
   handleClickReply: (comment: Comment) => void;
@@ -26,6 +27,8 @@ const CommentItem = ({
   handleClickReply,
   handleClickDeleteComment,
 }: Props) => {
+  const router = useRouter();
+
   const [likeState, setLikeState] = useState<{
     isLike: boolean;
     count: number;
@@ -106,6 +109,7 @@ const CommentItem = ({
                   fontWeight: 400,
                   height: '18px',
                 }}
+                onClick={() => router.push(`/like/${commentId}?type=comment`)}
               >
                 좋아요 {likeState.count}개
               </TextButton>
