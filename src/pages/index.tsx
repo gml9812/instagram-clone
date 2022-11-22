@@ -13,7 +13,6 @@ import ControlPointOutlinedIcon from '@mui/icons-material/ControlPointOutlined';
 import { getRefreshToken } from '@libs/token';
 import { GetServerSidePropsContext } from 'next';
 
-
 const Home = () => {
   const [initialPosts, setInitialPosts] = useState<Post[]>([]);
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -27,6 +26,7 @@ const Home = () => {
         size: DEFAULT_POST_SIZE,
       },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
