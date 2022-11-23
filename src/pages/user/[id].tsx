@@ -42,6 +42,7 @@ const ProfilePage: NextPage = () => {
       <ProfileHeader
         profileImage={data?.getUser.profileImage}
         name={data?.getUser.nickname}
+        isMe={data?.getUser.isMe}
       />
       <ProfileQuote quote={data?.getUser.quotes} name={data?.getUser.name} />
       <ProfileCounter
