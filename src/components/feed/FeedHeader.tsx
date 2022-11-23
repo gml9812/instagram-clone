@@ -31,7 +31,7 @@ const FeedHeader = ({
     setAnchorEl(null);
   };
   const handleProfileClick = () => {
-    router.push(`/${user.id}`);
+    router.push(`/user/${user.id}`);
   };
 
   return (

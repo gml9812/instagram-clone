@@ -32,8 +32,8 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { parseCookies } from 'nookies';
-import { CookiesName } from '@libs/values';
+import { useRecoilValue } from 'recoil';
+import { UserAtomState, userState } from 'src/recoil/userAtom';
 
 const Transition = forwardRef(
   (
@@ -53,12 +53,8 @@ interface Props {
   fileList: FileList;
 }
 
-const cookies = parseCookies();
-const user = cookies[CookiesName.user];
-const userIdx = user ? JSON.parse(user).id : '';
-const profileImage = user ? JSON.parse(user).profileImage : '';
-
 const CreatePostModal = ({ open, onClose, fileList }: Props) => {
+  const user: UserAtomState = useRecoilValue(userState);
   const [step, setStep] = useState<'choosePhoto' | 'writeDescription'>(
     'choosePhoto',
   );
@@ -74,7 +70,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
     onClose();
     setStep('choosePhoto');
     setDescription('');
-    window.location.href = '/'; // subscription 도입 이전 임시로 사용할 코드
+    window.location.href = '/'; // subscription 도입 이전 이미지 갱신 위해 임시로 사용할 코드
   };
 
   const handleCreatePost = async () => {
@@ -105,7 +101,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
     await createPost({
       variables: {
         post: {
-          userIdx,
+          userIdx: user.id,
           description,
           medias,
         },
@@ -318,7 +314,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
           >
             <Avatar
               alt=""
-              src={profileImage}
+              src={user.profileImage}
               sx={{ width: 32, height: 32, marginRight: 2, marginTop: 1 }}
             />
             <TextField
