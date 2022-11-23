@@ -12,11 +12,11 @@ import ProfilePosts from '@components/profile/ProfilePosts';
 
 const ProfilePage: NextPage = () => {
   const router = useRouter();
-  const { userId } = router.query;
+  const { id } = router.query;
 
   const { loading, error, data } = useQuery<{ getUser: User }>(GET_USER, {
     variables: {
-      id: userId,
+      id,
       postPaging: {
         lastId: 1,
         size: 12,
