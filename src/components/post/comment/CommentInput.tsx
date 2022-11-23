@@ -80,13 +80,12 @@ const CommentInput = ({
           }}
         >
           <ProfileButton
-            profileImage={
-              user.profileImage !== '' ? user.profileImage : undefined
-            }
+            user={user}
             sx={{ margin: '0 2px 0 0' }}
+            gap={4}
             size={45}
             borderBoxSize={37}
-            gap={4}
+            disableButtonClick
           />
 
           <RoundedInput

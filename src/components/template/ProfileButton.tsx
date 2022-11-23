@@ -4,13 +4,16 @@ import COLOR from '@styles/colors';
 import { Box, IconButton, SxProps, Theme } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
+import { User } from '@queries/auth';
 
 interface Props {
+  user: User;
   sx: SxProps<Theme> | undefined;
-  profileImage: string | undefined;
+  gap: number;
   size: number;
   borderBoxSize: number;
-  gap: number;
+  disableButtonClick: boolean;
 }
 
 const ProfileImageContainer = styled(Box)`
@@ -19,15 +22,25 @@ const ProfileImageContainer = styled(Box)`
   }
 `;
 
-const BorderProfileButton = ({
+const ProfileButton = ({
+  user,
   sx,
-  profileImage,
+  gap,
   size,
   borderBoxSize,
-  gap,
+  disableButtonClick,
 }: Props) => {
+  const router = useRouter();
   return (
-    <IconButton sx={{ padding: '4px', ...sx }}>
+    <IconButton
+      sx={{ padding: '4px', ...sx }}
+      onClick={() => {
+        if (disableButtonClick) {
+          return;
+        }
+        router.push(`/user/${user.id}`);
+      }}
+    >
       <ProfileImageContainer
         sx={{
           position: 'relative',
@@ -38,7 +51,14 @@ const BorderProfileButton = ({
           borderRadius: '100px',
         }}
       >
-        {!profileImage ? (
+        {user.profileImage ? (
+          <Image
+            className="rounded"
+            src={`${user.profileImage}`}
+            alt=""
+            layout="fill"
+          />
+        ) : (
           <AccountCircleIcon
             sx={{
               position: 'absolute',
@@ -49,17 +69,10 @@ const BorderProfileButton = ({
               color: COLOR.GREY.SUB,
             }}
           />
-        ) : (
-          <Image
-            className="rounded"
-            src={`${profileImage}`}
-            alt=""
-            layout="fill"
-          />
         )}
       </ProfileImageContainer>
     </IconButton>
   );
 };
 
-export default BorderProfileButton;
+export default ProfileButton;

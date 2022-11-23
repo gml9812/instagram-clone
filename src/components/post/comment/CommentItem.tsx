@@ -75,11 +75,12 @@ const CommentItem = ({
         }}
       >
         <ProfileButton
-          profileImage={user.profileImage}
+          user={user}
           sx={{ margin: '0 2px 0 0' }}
+          gap={3}
           size={32}
           borderBoxSize={26}
-          gap={3}
+          disableButtonClick={false}
         />
 
         <Box sx={{ padding: '4px 0 0' }}>
