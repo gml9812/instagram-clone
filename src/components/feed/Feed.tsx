@@ -8,6 +8,7 @@ import FeedIconActions from './FeedIconActions';
 
 interface Props extends Post {
   handleClickDeletePost: (postId: number) => Promise<void>;
+  handleClickUpdatePost: () => void;
 }
 
 const Feed = ({
@@ -21,6 +22,7 @@ const Feed = ({
   isMine,
   createdAt,
   handleClickDeletePost,
+  handleClickUpdatePost,
 }: Props): ReactElement => {
   return (
     <>
@@ -29,6 +31,7 @@ const Feed = ({
         user={user}
         isMine={isMine}
         handleClickDeletePost={handleClickDeletePost}
+        handleClickUpdatePost={handleClickUpdatePost}
       />
       <FeedImage imageList={medias} />
       <Box>

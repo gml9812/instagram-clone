@@ -34,6 +34,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import { useRecoilValue } from 'recoil';
 import { UserAtomState, userState } from 'src/recoil/userAtom';
+import COLOR from '@styles/colors';
 
 const Transition = forwardRef(
   (
@@ -221,12 +222,22 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
             {imageSrcList.map(imageSrc => {
               return (
                 <SwiperSlide key={`image-${imageSrc}`}>
-                  <Box sx={{ height: '60vh' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      position: 'relative',
+                      width: '100%',
+                      height: 'auto',
+                      background: COLOR.LIGHTGREY,
+                      aspectRatio: '1 / 1',
+                    }}
+                  >
                     <Image
                       src={imageSrc}
                       alt=""
                       layout="fill"
-                      objectFit="contain"
+                      objectFit="cover"
                     />
                   </Box>
                 </SwiperSlide>
@@ -240,6 +251,7 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
           label="이미지 업로드 위해 PHPSESSID 입력"
           value={phpsessid}
           onChange={(event: any) => setPhpsessid(event.target.value)}
+          sx={{ marginTop: 4 }}
         />
       </Dialog>
     );

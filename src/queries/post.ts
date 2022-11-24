@@ -114,6 +114,18 @@ export const GET_POST = gql`
   }
 `;
 
+export const UPDATE_POST = gql`
+  mutation updatePost($updatePost: UpdatePostInput) {
+    updatePost(updatePost: $updatePost) {
+      id
+      description
+      medias {
+        url
+      }
+    }
+  }
+`;
+
 export const DELETE_POST = gql`
   mutation deletePost($id: ID!) {
     deletePost(id: $id)
