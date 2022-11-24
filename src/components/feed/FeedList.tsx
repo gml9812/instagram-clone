@@ -4,6 +4,7 @@ import { DEFAULT_POST_SIZE, DELETE_POST, GET_POSTS, Post } from '@queries/post';
 import COLOR from '@styles/colors';
 import React, { useState } from 'react';
 import { InView } from 'react-intersection-observer';
+import UpdatePostModal from '@components/post/UpdatePostModal';
 import Feed from './Feed';
 
 interface Props {
@@ -18,6 +19,8 @@ const FeedList = ({ initialPosts }: Props) => {
   );
   const [isEndData, setIsEndData] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [updatePost, setUpdatePost] = useState<Post>();
+  const [openUpdatePostModal, setOpenUpdatePostModal] = useState(false);
   const { fetchMore } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
     variables: {
       postPaging: {
@@ -34,6 +37,11 @@ const FeedList = ({ initialPosts }: Props) => {
       post => Number(post.id) !== Number(postId),
     );
     setPosts(updatedPostList);
+  };
+
+  const chooseUpdatePost = (post: Post) => {
+    setOpenUpdatePostModal(true);
+    setUpdatePost(post);
   };
 
   const onInfiniteScroll = async () => {
@@ -64,7 +72,11 @@ const FeedList = ({ initialPosts }: Props) => {
             key={`post-${post.id}`}
             sx={{ padding: '4px  0' }}
           >
-            <Feed {...post} handleClickDeletePost={handleClickDeletePost} />
+            <Feed
+              {...post}
+              handleClickDeletePost={handleClickDeletePost}
+              handleClickUpdatePost={() => chooseUpdatePost(post)}
+            />
           </List>
         );
       })}
@@ -89,6 +101,11 @@ const FeedList = ({ initialPosts }: Props) => {
             onInfiniteScroll();
           }
         }}
+      />
+      <UpdatePostModal
+        open={openUpdatePostModal}
+        onClose={() => setOpenUpdatePostModal(false)}
+        post={updatePost}
       />
     </>
   );

@@ -15,6 +15,7 @@ interface Props {
   anchorEl: HTMLElement | null;
   handleClose: () => void;
   handleClickDeletePost: (postId: number) => Promise<void>;
+  handleClickUpdatePost: () => void;
 }
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -62,6 +63,7 @@ const FeedAccordion = ({
   anchorEl,
   handleClose,
   handleClickDeletePost,
+  handleClickUpdatePost,
 }: Props) => {
   const router = useRouter();
   return (
@@ -81,7 +83,13 @@ const FeedAccordion = ({
     >
       {isMine ? (
         <ul>
-          <MenuItem onClick={handleClose} disableRipple>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleClickUpdatePost();
+            }}
+            disableRipple
+          >
             <EditIcon />
             수정하기
           </MenuItem>
