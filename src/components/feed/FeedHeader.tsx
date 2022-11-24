@@ -13,6 +13,7 @@ interface Props {
   user: User;
   isMine: boolean;
   handleClickDeletePost: (postId: number) => Promise<void>;
+  handleClickUpdatePost: () => void;
 }
 
 const FeedHeader = ({
@@ -20,6 +21,7 @@ const FeedHeader = ({
   user,
   isMine,
   handleClickDeletePost,
+  handleClickUpdatePost,
 }: Props): ReactElement => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -89,6 +91,7 @@ const FeedHeader = ({
         anchorEl={anchorEl}
         handleClose={handleClose}
         handleClickDeletePost={handleClickDeletePost}
+        handleClickUpdatePost={handleClickUpdatePost}
       />
     </Box>
   );
