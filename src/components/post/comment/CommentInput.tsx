@@ -5,7 +5,7 @@ import { Box, IconButton } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import COLOR from '@styles/colors';
 import ProfileButton from '@components/template/ProfileButton';
-import { Comment } from '@queries/post';
+import { Comment } from '@queries/comment';
 import { useRecoilValue } from 'recoil';
 import { UserAtomState, userState } from 'src/recoil/userAtom';
 

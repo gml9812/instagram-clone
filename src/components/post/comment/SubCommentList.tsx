@@ -4,10 +4,10 @@ import { useMutation, useQuery } from '@apollo/client';
 import {
   DEFAULT_SUBCOMMENT_SIZE,
   GET_COMMENTS,
+  DELETE_COMMENT,
   Comment,
   NewSubComment,
-  DELETE_COMMENT,
-} from '@queries/post';
+} from '@queries/comment';
 import { Box, List } from '@mui/material';
 import SubCommentItem from './SubCommentItem';
 

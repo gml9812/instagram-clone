@@ -2,16 +2,16 @@ import React, { ChangeEvent, useRef, useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { useMutation, useQuery } from '@apollo/client';
 import { Box, CircularProgress, List } from '@mui/material';
+import { GET_POST } from '@queries/post';
 import {
   DEFAULT_COMMENT_SIZE,
-  GET_POST,
   PostWithComment,
   Comment,
   CREATE_COMMENT,
   DELETE_COMMENT,
   CREATE_SUBCOMMENT,
   NewSubComment,
-} from '@queries/post';
+} from '@queries/comment';
 import COLOR from '@styles/colors';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';

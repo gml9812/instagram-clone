@@ -4,7 +4,7 @@ import { getRefreshToken } from '@libs/token';
 import { GetServerSidePropsContext } from 'next';
 import DetailPageHeader from '@components/layout/DetailPageHeader';
 import LikeMemberList from '@components/like/LikeMemberList';
-import { DEFAULT_LIKE_MEMBER_SIZE, GET_LIKES, LikeItem } from '@queries/post';
+import { DEFAULT_LIKE_MEMBER_SIZE, GET_LIKES, LikeItem } from '@queries/like';
 import { useQuery } from '@apollo/client';
 import { Box } from '@mui/material';
 

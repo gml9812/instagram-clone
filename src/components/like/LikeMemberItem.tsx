@@ -1,6 +1,6 @@
 import ProfileButton from '@components/template/ProfileButton';
 import { Box } from '@mui/material';
-import { LikeItem } from '@queries/post';
+import { LikeItem } from '@queries/like';
 import COLOR from '@styles/colors';
 import React from 'react';
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { Box, CircularProgress, List } from '@mui/material';
-import { DEFAULT_LIKE_MEMBER_SIZE, GET_LIKES, LikeItem } from '@queries/post';
+import { DEFAULT_LIKE_MEMBER_SIZE, GET_LIKES, LikeItem } from '@queries/like';
 import COLOR from '@styles/colors';
 import { InView } from 'react-intersection-observer';
 import LikeMemberItem from './LikeMemberItem';

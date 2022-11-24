@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
-import { Comment, CREATE_LIKE, DELETE_LIKE } from '@queries/post';
+import { Comment } from '@queries/comment';
+import { CREATE_LIKE, DELETE_LIKE } from '@queries/like';
+
 import { ago } from '@libs/moment';
 import LikeIcon from '@icons/LikeIcon';
 import ProfileButton from '@components/template/ProfileButton';
