@@ -47,7 +47,7 @@ const ProfileButton = ({
           margin: '4px',
           width: `${borderBoxSize}px`,
           height: `${borderBoxSize}px`,
-          border: `1px solid ${COLOR.LIGHTGREY}`,
+          border: `0.5px solid ${COLOR.GREY.SUB}`,
           borderRadius: '100px',
         }}
       >
