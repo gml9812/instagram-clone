@@ -1,4 +1,4 @@
-import React, { ChangeEvent, RefObject } from 'react';
+import React, { ChangeEvent, KeyboardEvent, RefObject } from 'react';
 import RoundedInput from '@components/template/RoundedInput';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
@@ -27,6 +27,12 @@ const CommentInput = ({
   handleClickSubmit,
 }: Props) => {
   const user: UserAtomState = useRecoilValue(userState);
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === 'Enter') {
+      handleClickSubmit();
+    }
+  };
 
   return (
     <>
@@ -89,12 +95,13 @@ const CommentInput = ({
           />
 
           <RoundedInput
-            inputRef={inputRef}
+            sx={{ imeMode: 'auto' }}
             value={inputValue}
+            inputRef={inputRef}
             handleChange={event => {
               handleChangeInput(event);
             }}
-            sx={{ imeMode: 'auto' }}
+            handleKeyDown={handleKeyDown}
             endAdornment={
               inputValue === '' ? undefined : (
                 <TextButton
