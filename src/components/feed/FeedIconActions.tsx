@@ -6,7 +6,7 @@ import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { useRouter } from 'next/router';
 import { useMutation } from '@apollo/client';
-import { CREATE_LIKE, DELETE_LIKE } from '@queries/post';
+import { CREATE_LIKE, DELETE_LIKE } from '@queries/like';
 
 interface Props {
   id: number;

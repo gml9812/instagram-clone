@@ -56,11 +56,12 @@ const FeedHeader = ({
         onClick={handleProfileClick}
       >
         <ProfileButton
-          profileImage={user.profileImage}
+          user={user}
           sx={{}}
+          gap={3}
           size={32}
           borderBoxSize={26}
-          gap={3}
+          disableButtonClick
         />
 
         <TextButton

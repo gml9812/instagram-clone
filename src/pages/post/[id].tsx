@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import { DEFAULT_COMMENT_SIZE, GET_POST, PostWithComment } from '@queries/post';
+import { GET_POST } from '@queries/post';
+import { DEFAULT_COMMENT_SIZE, PostWithComment } from '@queries/comment';
 import { getRefreshToken } from '@libs/token';
 import COLOR from '@styles/colors';
 import { Box } from '@mui/material';

@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import COLOR from '@styles/colors';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
-import { Comment, CREATE_LIKE, DELETE_LIKE } from '@queries/post';
+import { Comment } from '@queries/comment';
+import { CREATE_LIKE, DELETE_LIKE } from '@queries/like';
+
 import { ago } from '@libs/moment';
 import LikeIcon from '@icons/LikeIcon';
 import ProfileButton from '@components/template/ProfileButton';
@@ -75,11 +77,12 @@ const CommentItem = ({
         }}
       >
         <ProfileButton
-          profileImage={user.profileImage}
+          user={user}
           sx={{ margin: '0 2px 0 0' }}
+          gap={3}
           size={32}
           borderBoxSize={26}
-          gap={3}
+          disableButtonClick={false}
         />
 
         <Box sx={{ padding: '4px 0 0' }}>

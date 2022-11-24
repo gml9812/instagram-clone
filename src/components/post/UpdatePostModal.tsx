@@ -143,35 +143,38 @@ const UpdatePostModal = ({ open, onClose, post }: Props) => {
         </Container>
       </AppBar>
 
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-          padding: '4px 10px 4px 6px',
-        }}
-      >
-        <ProfileButton
-          profileImage={post?.user.profileImage}
-          sx={{}}
-          size={32}
-          borderBoxSize={26}
-          gap={3}
-        />
-
-        <TextButton
+      {post && (
+        <Box
           sx={{
             display: 'flex',
-            justifyContent: 'start',
-            padding: '0 4px',
-            fontSize: '1.1rem',
-            fontWeight: 700,
-            color: COLOR.CHARCOAL,
+            alignItems: 'center',
+            width: '100%',
+            padding: '4px 10px 4px 6px',
           }}
         >
-          {post?.user.nickname}
-        </TextButton>
-      </Box>
+          <ProfileButton
+            user={post.user}
+            sx={{}}
+            gap={3}
+            size={32}
+            borderBoxSize={26}
+            disableButtonClick={false}
+          />
+
+          <TextButton
+            sx={{
+              display: 'flex',
+              justifyContent: 'start',
+              padding: '0 4px',
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              color: COLOR.CHARCOAL,
+            }}
+          >
+            {post.user.nickname}
+          </TextButton>
+        </Box>
+      )}
 
       <Box
         sx={{

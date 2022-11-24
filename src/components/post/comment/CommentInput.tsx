@@ -1,11 +1,11 @@
-import React, { ChangeEvent, RefObject } from 'react';
+import React, { ChangeEvent, KeyboardEvent, RefObject } from 'react';
 import RoundedInput from '@components/template/RoundedInput';
 import TextButton from '@components/template/TextButton';
 import { Box, IconButton } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import COLOR from '@styles/colors';
 import ProfileButton from '@components/template/ProfileButton';
-import { Comment } from '@queries/post';
+import { Comment } from '@queries/comment';
 import { useRecoilValue } from 'recoil';
 import { UserAtomState, userState } from 'src/recoil/userAtom';
 
@@ -27,6 +27,12 @@ const CommentInput = ({
   handleClickSubmit,
 }: Props) => {
   const user: UserAtomState = useRecoilValue(userState);
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.code === 'Enter') {
+      handleClickSubmit();
+    }
+  };
 
   return (
     <>
@@ -80,22 +86,22 @@ const CommentInput = ({
           }}
         >
           <ProfileButton
-            profileImage={
-              user.profileImage !== '' ? user.profileImage : undefined
-            }
+            user={user}
             sx={{ margin: '0 2px 0 0' }}
+            gap={4}
             size={45}
             borderBoxSize={37}
-            gap={4}
+            disableButtonClick
           />
 
           <RoundedInput
-            inputRef={inputRef}
+            sx={{ imeMode: 'auto' }}
             value={inputValue}
+            inputRef={inputRef}
             handleChange={event => {
               handleChangeInput(event);
             }}
-            sx={{ imeMode: 'auto' }}
+            handleKeyDown={handleKeyDown}
             endAdornment={
               inputValue === '' ? undefined : (
                 <TextButton
