@@ -1,6 +1,7 @@
 import { User } from '@queries/auth';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { v1 } from 'uuid';
 
 const { persistAtom } = recoilPersist();
 
@@ -9,7 +10,7 @@ export interface UserAtomState extends User {
 }
 
 export const userState = atom({
-  key: 'userState',
+  key: `userState/${v1()}`,
   default: {
     id: 0,
     nickname: '',
