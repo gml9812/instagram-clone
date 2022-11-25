@@ -14,25 +14,29 @@ import FeedList from '@components/feed/FeedList';
 import { useQuery } from '@apollo/client';
 import { getRefreshToken } from '@libs/token';
 import { GetServerSidePropsContext } from 'next';
-// import { wsClient, wsConnect, wsDisconnect } from 'src/stomp/stompClient';
+import { wsClient, wsConnect, wsDisconnect } from 'src/stomp/stompClient';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 import { UserAtomState, userState } from 'src/recoil/userAtom';
+import FloatingButton from '@components/template/FloatingButton';
 
 const Home = () => {
   const router = useRouter();
   const user: UserAtomState = useRecoilValue(userState);
 
-  // const wsSubscribe = () => {
-  //   wsClient.subscribe('/sub/notification', res => {
-  //     console.log('res', res.body);
-  //   });
-  // };
+  const [isShowFloatingButton, setIsShowFloatingButton] =
+    useState<boolean>(false);
 
-  // useEffect(() => {
-  //   wsConnect(wsSubscribe);
-  //   return () => wsDisconnect();
-  // }, []);
+  const wsSubscribe = () => {
+    wsClient.subscribe('/sub/noti/post', res => {
+      setIsShowFloatingButton(res.body.toLocaleLowerCase() === 'true');
+    });
+  };
+
+  useEffect(() => {
+    wsConnect(wsSubscribe);
+    return () => wsDisconnect();
+  }, []);
 
   // 새로운 알림이 있다면 true
   const isAlert = false;
@@ -64,6 +68,10 @@ const Home = () => {
 
   const handleClickLogo = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleClickNewPost = () => {
+    router.reload();
   };
 
   return (
@@ -115,6 +123,14 @@ const Home = () => {
       />
 
       {initialPosts.length > 0 && <FeedList initialPosts={initialPosts} />}
+
+      <FloatingButton
+        sx={{ display: 'flex', justifyContent: 'center' }}
+        title="새 게시물"
+        isShow={isShowFloatingButton}
+        handleClick={handleClickNewPost}
+      />
+
       {fileList ? (
         <CreatePostModal
           open={openCreatePostModal}
