@@ -3,18 +3,13 @@ import COLOR from '@styles/colors';
 import { Container, Box, AppBar } from '@mui/material';
 
 interface Props {
-  headerIcon: JSX.Element | undefined;
   leftButton: JSX.Element | undefined;
   rightButton: JSX.Element | undefined;
 }
 
 export const HEADER_HEIGHT = 54;
 
-const CustomHeader = ({
-  headerIcon,
-  leftButton,
-  rightButton,
-}: Props): ReactElement => {
+const CustomHeader = ({ leftButton, rightButton }: Props): ReactElement => {
   const [isHeaderBottomStyle, setIsHeaderBottomStyle] =
     useState<boolean>(false);
 
@@ -56,11 +51,8 @@ const CustomHeader = ({
           }`,
         }}
       >
-        {headerIcon}
-        <Box>
-          {leftButton}
-          {rightButton}
-        </Box>
+        {leftButton}
+        <Box>{rightButton}</Box>
       </AppBar>
       <Container sx={{ height: `${HEADER_HEIGHT}px` }} />
     </>
