@@ -32,10 +32,10 @@ const SubCommentItem = ({
     count: number;
   }>({ isLike, count: likeCount });
   const [createLike] = useMutation<{ createLike: boolean }>(CREATE_LIKE, {
-    variables: { likeInput: { itemId: id, type: 'SUB_COMMENT' } },
+    variables: { likeInput: { itemId: id, type: 'COMMENT' } },
   });
   const [deleteLike] = useMutation<{ deleteLike: boolean }>(DELETE_LIKE, {
-    variables: { likeInput: { itemId: id, type: 'SUB_COMMENT' } },
+    variables: { likeInput: { itemId: id, type: 'COMMENT' } },
   });
 
   const handleClickLike = async () => {
