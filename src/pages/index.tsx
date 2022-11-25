@@ -5,6 +5,10 @@ import CreatePostModal from '@components/post/CreatePostModal';
 import Logo from '@icons/Logo';
 import AddIcon from '@icons/AddIcon';
 import AccountIcon from '@icons/AccountIcon';
+import {
+  DefaultNotificationIcon,
+  AlertNotificationIcon,
+} from '@icons/NotificationIcon';
 import { GET_POSTS, Post, DEFAULT_POST_SIZE } from '@queries/post';
 import FeedList from '@components/feed/FeedList';
 import { useQuery } from '@apollo/client';
@@ -29,6 +33,9 @@ const Home = () => {
   //   wsConnect(wsSubscribe);
   //   return () => wsDisconnect();
   // }, []);
+
+  // 새로운 알림이 있다면 true
+  const isAlert = false;
 
   const [initialPosts, setInitialPosts] = useState<Post[]>([]);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
@@ -55,36 +62,55 @@ const Home = () => {
     }
   }, [data]);
 
+  const handleClickLogo = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <>
       <CustomHeader
-        headerIcon={
-          <Box sx={{ margin: '8px 0 0 10px' }}>
+        leftButton={
+          <Box sx={{ margin: '8px 0 0 10px' }} onClick={handleClickLogo}>
             <Logo width={112} height={32} />
           </Box>
         }
-        leftButton={
-          <IconButton sx={{ margin: '0 6px 0 0' }} component="label">
-            <AddIcon />
-            <input
-              hidden
-              accept="image/*"
-              multiple
-              type="file"
-              onChange={onFileUpload}
-            />
-          </IconButton>
-        }
         rightButton={
-          <IconButton
-            onClick={() => {
-              if (user.isLogin) {
-                router.push(`/user/${user.id}`);
-              }
-            }}
-          >
-            <AccountIcon />
-          </IconButton>
+          <>
+            <IconButton component="label">
+              <AddIcon />
+              <input
+                hidden
+                accept="image/*"
+                multiple
+                type="file"
+                onChange={onFileUpload}
+              />
+            </IconButton>
+
+            <IconButton
+              onClick={() => {
+                if (user.isLogin) {
+                  router.push(`/notification/${user.id}`);
+                }
+              }}
+            >
+              {isAlert ? (
+                <AlertNotificationIcon />
+              ) : (
+                <DefaultNotificationIcon />
+              )}
+            </IconButton>
+
+            <IconButton
+              onClick={() => {
+                if (user.isLogin) {
+                  router.push(`/user/${user.id}`);
+                }
+              }}
+            >
+              <AccountIcon />
+            </IconButton>
+          </>
         }
       />
 

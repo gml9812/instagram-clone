@@ -4,6 +4,7 @@ import { Box, CircularProgress, List } from '@mui/material';
 import { DEFAULT_LIKE_MEMBER_SIZE, GET_LIKES, LikeItem } from '@queries/like';
 import COLOR from '@styles/colors';
 import { InView } from 'react-intersection-observer';
+import { useRouter } from 'next/router';
 import LikeMemberItem from './LikeMemberItem';
 
 interface Props {
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const LikeMemberList = ({ id, type, initialLikeMembers }: Props) => {
+  const router = useRouter();
   const initialLastId = initialLikeMembers[initialLikeMembers.length - 1]?.id;
   const [likeMembers, setLikeMembers] =
     useState<LikeItem[]>(initialLikeMembers);
@@ -63,6 +65,7 @@ const LikeMemberList = ({ id, type, initialLikeMembers }: Props) => {
             id={`like-${item.id}`}
             key={`like-${item.id}`}
             sx={{ padding: '4px 0' }}
+            onClick={() => router.push(`/user/${item.user.id}`)}
           >
             <LikeMemberItem item={item} />
           </List>
