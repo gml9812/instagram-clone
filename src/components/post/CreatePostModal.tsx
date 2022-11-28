@@ -71,7 +71,6 @@ const CreatePostModal = ({ open, onClose, fileList }: Props) => {
     onClose();
     setStep('choosePhoto');
     setDescription('');
-    window.location.href = '/'; // subscription 도입 이전 이미지 갱신 위해 임시로 사용할 코드
   };
 
   const handleCreatePost = async () => {

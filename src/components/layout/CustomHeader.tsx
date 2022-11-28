@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import COLOR from '@styles/colors';
 import { Container, Box, AppBar } from '@mui/material';
@@ -5,11 +6,16 @@ import { Container, Box, AppBar } from '@mui/material';
 interface Props {
   leftButton: JSX.Element | undefined;
   rightButton: JSX.Element | undefined;
+  children?: React.ReactNode;
 }
 
 export const HEADER_HEIGHT = 54;
 
-const CustomHeader = ({ leftButton, rightButton }: Props): ReactElement => {
+const CustomHeader = ({
+  leftButton,
+  rightButton,
+  children,
+}: Props): ReactElement => {
   const [isHeaderBottomStyle, setIsHeaderBottomStyle] =
     useState<boolean>(false);
 
@@ -52,6 +58,7 @@ const CustomHeader = ({ leftButton, rightButton }: Props): ReactElement => {
         }}
       >
         {leftButton}
+        {children}
         <Box>{rightButton}</Box>
       </AppBar>
       <Container sx={{ height: `${HEADER_HEIGHT}px` }} />
