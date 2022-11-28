@@ -13,9 +13,11 @@ import { useRouter } from 'next/router';
 
 const PostPage = () => {
   const router = useRouter();
-  const postId = Number(router.query.id) || undefined;
-  const [initialPost, setInitialPost] = useState<PostWithComment | null>(null);
+  const { id, target } = router.query;
+  const postId = Number(id) || undefined;
+  const targetCommentId = Number(target) || undefined;
 
+  const [initialPost, setInitialPost] = useState<PostWithComment | null>(null);
   const { fetchMore } = useQuery<{ getPost: PostWithComment }>(GET_POST, {
     variables: {
       id: postId,
@@ -63,6 +65,7 @@ const PostPage = () => {
             postId={postId}
             commetCount={initialPost.commentCount}
             initialComments={initialPost.comments}
+            targetCommentId={targetCommentId}
           />
         </>
       )}

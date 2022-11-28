@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { useMutation, useQuery } from '@apollo/client';
 import { Box, CircularProgress, List } from '@mui/material';
@@ -13,6 +13,7 @@ import {
   NewSubComment,
 } from '@queries/comment';
 import COLOR from '@styles/colors';
+import { useRouter } from 'next/router';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
 import SubCommentList from './SubCommentList';
@@ -21,9 +22,17 @@ interface Props {
   postId: number;
   commetCount: number;
   initialComments: Comment[];
+  targetCommentId: number | undefined;
 }
 
-const CommentList = ({ postId, commetCount, initialComments }: Props) => {
+const CommentList = ({
+  postId,
+  commetCount,
+  initialComments,
+  targetCommentId,
+}: Props) => {
+  const router = useRouter();
+
   const initialLastId = initialComments[initialComments.length - 1]?.id;
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [lastId, setLastId] = useState<number | undefined>(
@@ -151,6 +160,15 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (targetCommentId) {
+      setTimeout(() => {
+        router.replace(`/post/${postId}`);
+      }, 3000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [targetCommentId]);
+
   return (
     <>
       {comments.map(comment => {
@@ -160,12 +178,17 @@ const CommentList = ({ postId, commetCount, initialComments }: Props) => {
             ? newSubComment
             : null;
         const isShowSubCommentList = subCommentCount > 0 || newSubComment;
+        const isTargetComment = targetCommentId === Number(id);
+        const listStyle = {
+          background: isTargetComment ? 'rgba(198, 222, 251, 0.25)' : '',
+          transition: isTargetComment ? 'all 0.5s ease-out' : 'none',
+        };
 
         return (
           <List
             id={`comment-${id}`}
             key={`comment-${id}`}
-            sx={{ padding: '8px' }}
+            sx={{ padding: '8px', ...listStyle }}
           >
             <CommentItem
               {...comment}
