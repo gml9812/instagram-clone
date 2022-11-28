@@ -83,7 +83,6 @@ const UpdatePostModal = ({ open, onClose, post }: Props) => {
       },
     });
     onClose();
-    window.location.href = '/'; // subscription 도입 이전 글 갱신 위한 임시 코드
   };
 
   useEffect(() => {

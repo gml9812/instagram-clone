@@ -1,25 +1,12 @@
 import { Avatar, Box, Typography, Button } from '@mui/material';
-import { useSetRecoilState } from 'recoil';
-import { userState } from 'src/recoil/userAtom';
-import { setAccessToken, setRefreshToken } from '@libs/token';
 
 const ProfileHeader = ({
   profileImage,
   name,
-  isMe,
 }: {
   profileImage: string | undefined;
   name: string | undefined;
-  isMe: boolean | undefined;
 }) => {
-  const setUser = useSetRecoilState(userState);
-  const handleClickLogout = () => {
-    setAccessToken('');
-    setRefreshToken('');
-    setUser({ id: 0, nickname: '', profileImage: '', isLogin: false });
-    window.location.href = '/';
-  };
-
   return (
     <Box
       sx={{
@@ -78,23 +65,6 @@ const ProfileHeader = ({
           >
             팔로잉
           </Button> */}
-          {isMe ? (
-            <Button
-              variant="outlined"
-              sx={{
-                fontSize: '14px',
-                fontWeight: 700,
-                color: '#ed4956',
-                lineHeight: '18px',
-                border: '1px solid #dbdbdb',
-                padding: '5px 9px',
-                marginRight: '8px',
-              }}
-              onClick={handleClickLogout}
-            >
-              로그아웃
-            </Button>
-          ) : null}
           <Button
             variant="outlined"
             sx={{
