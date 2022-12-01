@@ -74,7 +74,7 @@ const FeedIconActions = ({ id, isLike, likeCount }: Props) => {
             lineHeight: '20px',
             letterSpacing: '-0.02em',
           }}
-          onClick={() => router.push(`like/${id}?type=post`)}
+          onClick={() => router.push(`/like/${id}?type=post`)}
         >
           {`좋아요 ${likeState.count}개`}
         </TextButton>
