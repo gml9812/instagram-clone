@@ -40,7 +40,7 @@ const FeedIconActions = ({ id, isLike, likeCount }: Props) => {
   };
 
   const handleClickComment = () => {
-    router.push(`/post/${id}`);
+    router.push(`/comments/${id}`);
   };
 
   return (
