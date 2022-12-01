@@ -77,6 +77,31 @@ export const GET_POST = gql`
   }
 `;
 
+export const GET_POST_DETAIL = gql`
+  query getPost($id: ID!, $commentPaging: CommentPagingInput!) {
+    getPost(id: $id, commentPaging: $commentPaging) {
+      id
+      user {
+        id
+        nickname
+        profileImage
+      }
+      description
+      medias {
+        id
+        url
+        width
+        height
+      }
+      likeCount
+      commentCount
+      isLike
+      isMine
+      createdAt
+    }
+  }
+`;
+
 export const CREATE_POST = gql`
   mutation createPost($post: PostInput) {
     createPost(post: $post) {
