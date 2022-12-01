@@ -37,7 +37,7 @@ export const AlertNotificationIcon = () => {
         r="4.1"
         fill={COLOR.RED}
         stroke={COLOR.RED}
-        stroke-width="0.2"
+        strokeWidth="0.2"
       />
     </svg>
   );

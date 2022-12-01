@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, CircularProgress } from '@mui/material';
 import CustomHeader from '@components/layout/CustomHeader';
 import CreatePostModal from '@components/post/CreatePostModal';
 import Logo from '@icons/Logo';
@@ -9,6 +9,7 @@ import {
   DefaultNotificationIcon,
   AlertNotificationIcon,
 } from '@icons/NotificationIcon';
+import COLOR from '@styles/colors';
 import { GET_POSTS, Post, DEFAULT_POST_SIZE } from '@queries/post';
 import FeedList from '@components/feed/FeedList';
 import { useQuery } from '@apollo/client';
@@ -23,6 +24,18 @@ import FloatingButton from '@components/template/FloatingButton';
 const Home = () => {
   const router = useRouter();
   const user: UserAtomState = useRecoilValue(userState);
+  const [isAlert, setIsAlert] = useState(false);
+  const [initialPosts, setInitialPosts] = useState<Post[]>([]);
+  const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
+  const [fileList, setFileList] = useState<FileList>();
+  const { data, loading, error } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
+    variables: {
+      postPaging: {
+        size: DEFAULT_POST_SIZE,
+      },
+    },
+    fetchPolicy: 'no-cache',
+  });
 
   const [isShowFloatingButton, setIsShowFloatingButton] =
     useState<boolean>(false);
@@ -31,27 +44,21 @@ const Home = () => {
     wsClient.subscribe('/sub/noti/post', res => {
       setIsShowFloatingButton(res.body.toLocaleLowerCase() === 'true');
     });
+    wsClient.subscribe(`/sub/noti/comment/${user.id}`, () => {
+      setIsAlert(true);
+    });
+    wsClient.subscribe(`/sub/noti/subcomment/${user.id}`, () => {
+      setIsAlert(true);
+    });
+    wsClient.subscribe(`/sub/noti/like/${user.id}`, () => {
+      setIsAlert(true);
+    });
   };
 
   useEffect(() => {
     wsConnect(wsSubscribe);
     return () => wsDisconnect();
   }, []);
-
-  // 새로운 알림이 있다면 true
-  const isAlert = false;
-
-  const [initialPosts, setInitialPosts] = useState<Post[]>([]);
-  const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
-  const [fileList, setFileList] = useState<FileList>();
-  const { data } = useQuery<{ getPosts: Post[] }>(GET_POSTS, {
-    variables: {
-      postPaging: {
-        size: DEFAULT_POST_SIZE,
-      },
-    },
-    fetchPolicy: 'no-cache',
-  });
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files !== null) {
@@ -74,6 +81,23 @@ const Home = () => {
     router.reload();
   };
 
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          height: '30px',
+          color: COLOR.GREY.SUB,
+        }}
+      >
+        <CircularProgress size={20} color="inherit" />
+      </Box>
+    );
+  }
+  if (error) {
+    return <div>error</div>;
+  }
   return (
     <>
       <CustomHeader

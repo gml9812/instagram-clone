@@ -14,6 +14,7 @@ import {
 } from '@queries/comment';
 import COLOR from '@styles/colors';
 import { useRouter } from 'next/router';
+import { useMoveScroll } from '@libs/hooks/useMoveScroll';
 import CommentInput from './CommentInput';
 import CommentItem from './CommentItem';
 import SubCommentList from './SubCommentList';
@@ -32,6 +33,7 @@ const CommentList = ({
   targetCommentId,
 }: Props) => {
   const router = useRouter();
+  const { scrollToElement, setRef } = useMoveScroll();
 
   const initialLastId = initialComments[initialComments.length - 1]?.id;
   const [comments, setComments] = useState<Comment[]>(initialComments);
@@ -40,16 +42,19 @@ const CommentList = ({
   );
   const [isEndData, setIsEndData] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { fetchMore } = useQuery<{ getPost: PostWithComment }>(GET_POST, {
-    variables: {
-      id: postId,
-      commentPaging: {
-        size: DEFAULT_COMMENT_SIZE,
-        lastId,
+  const { fetchMore, loading } = useQuery<{ getPost: PostWithComment }>(
+    GET_POST,
+    {
+      variables: {
+        id: postId,
+        commentPaging: {
+          size: DEFAULT_COMMENT_SIZE,
+          lastId,
+        },
       },
+      fetchPolicy: 'no-cache',
     },
-    fetchPolicy: 'no-cache',
-  });
+  );
 
   const onInfiniteScroll = async () => {
     if (commetCount < DEFAULT_COMMENT_SIZE) {
@@ -161,13 +166,23 @@ const CommentList = ({
   };
 
   useEffect(() => {
-    if (targetCommentId) {
-      setTimeout(() => {
-        router.replace(`/post/${postId}`);
-      }, 3000);
+    if (!targetCommentId) {
+      return undefined;
     }
+    const timer = setTimeout(() => {
+      router.replace(`/comments/${postId}`, undefined, { scroll: false });
+    }, 3000);
+
+    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetCommentId]);
+
+  useEffect(() => {
+    if (!targetCommentId || loading) {
+      return;
+    }
+    scrollToElement(targetCommentId);
+  }, [scrollToElement, targetCommentId, loading]);
 
   return (
     <>
@@ -189,6 +204,7 @@ const CommentList = ({
             id={`comment-${id}`}
             key={`comment-${id}`}
             sx={{ padding: '8px', ...listStyle }}
+            {...setRef(Number(id))}
           >
             <CommentItem
               {...comment}

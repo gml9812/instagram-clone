@@ -121,7 +121,7 @@ const FeedAccordion = ({
           <MenuItem
             onClick={() => {
               handleClose();
-              router.push(`/post/${postId}`);
+              router.push(`/comments/${postId}`);
             }}
             disableRipple
           >

@@ -23,7 +23,7 @@ const FeedText = ({
 }: Props): ReactElement => {
   const router = useRouter();
   const handleClickComment = () => {
-    router.push(`/post/${id}`);
+    router.push(`/comments/${id}`);
   };
 
   return (
