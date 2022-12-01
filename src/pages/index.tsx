@@ -24,24 +24,7 @@ import FloatingButton from '@components/template/FloatingButton';
 const Home = () => {
   const router = useRouter();
   const user: UserAtomState = useRecoilValue(userState);
-
-  const [isShowFloatingButton, setIsShowFloatingButton] =
-    useState<boolean>(false);
-
-  const wsSubscribe = () => {
-    wsClient.subscribe('/sub/noti/post', res => {
-      setIsShowFloatingButton(res.body.toLocaleLowerCase() === 'true');
-    });
-  };
-
-  useEffect(() => {
-    wsConnect(wsSubscribe);
-    return () => wsDisconnect();
-  }, []);
-
-  // 새로운 알림이 있다면 true
-  const isAlert = false;
-
+  const [isAlert, setIsAlert] = useState(false);
   const [initialPosts, setInitialPosts] = useState<Post[]>([]);
   const [openCreatePostModal, setOpenCreatePostModal] = useState(false);
   const [fileList, setFileList] = useState<FileList>();
@@ -53,6 +36,29 @@ const Home = () => {
     },
     fetchPolicy: 'no-cache',
   });
+
+  const [isShowFloatingButton, setIsShowFloatingButton] =
+    useState<boolean>(false);
+
+  const wsSubscribe = () => {
+    wsClient.subscribe('/sub/noti/post', res => {
+      setIsShowFloatingButton(res.body.toLocaleLowerCase() === 'true');
+    });
+    wsClient.subscribe(`/sub/noti/comment/${user.id}`, () => {
+      setIsAlert(true);
+    });
+    wsClient.subscribe(`/sub/noti/subcomment/${user.id}`, () => {
+      setIsAlert(true);
+    });
+    wsClient.subscribe(`/sub/noti/like/${user.id}`, () => {
+      setIsAlert(true);
+    });
+  };
+
+  useEffect(() => {
+    wsConnect(wsSubscribe);
+    return () => wsDisconnect();
+  }, []);
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files !== null) {
