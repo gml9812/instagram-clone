@@ -18,7 +18,6 @@ const DetailPageHeader = ({ pageName }: Props) => {
         elevation={0}
         sx={{
           position: 'fixed',
-          zIndex: 9999,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
