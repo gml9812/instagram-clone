@@ -68,7 +68,7 @@ const Notification = () => {
                     }
                   >
                     <Avatar
-                      alt={notificationContent.notificationDto.nickName}
+                      alt={notificationContent.notificationDto.nickname}
                       src={notificationContent.notificationDto.profileImage}
                       sx={{ width: 44, height: 44 }}
                     />
@@ -91,7 +91,7 @@ const Notification = () => {
                   >
                     <HtmlText
                       sx={{}}
-                      nickname={notificationContent.notificationDto.nickName}
+                      nickname={notificationContent.notificationDto.nickname}
                       description={
                         notificationContent.likeType
                           ? `님이 회원님의 ${
@@ -132,7 +132,7 @@ const Notification = () => {
                   }
                 >
                   <Avatar
-                    alt={notificationContent.notificationDto.nickName}
+                    alt={notificationContent.notificationDto.nickname}
                     src={notificationContent.notificationDto.imageUrl}
                     sx={{ width: 44, height: 44 }}
                     variant="square"
