@@ -5,6 +5,7 @@ import CreatePostModal from '@components/post/CreatePostModal';
 import Logo from '@icons/Logo';
 import AddIcon from '@icons/AddIcon';
 import AccountIcon from '@icons/AccountIcon';
+import PlaneIcon from '@icons/PlaneIcon';
 import {
   DefaultNotificationIcon,
   AlertNotificationIcon,
@@ -58,6 +59,7 @@ const Home = () => {
   useEffect(() => {
     wsConnect(wsSubscribe);
     return () => wsDisconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,6 +133,10 @@ const Home = () => {
               ) : (
                 <DefaultNotificationIcon />
               )}
+            </IconButton>
+
+            <IconButton>
+              <PlaneIcon />
             </IconButton>
 
             <IconButton

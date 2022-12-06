@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import CommentRoundedIcon from '@mui/icons-material/CommentRounded';
+import EmailIcon from '@mui/icons-material/Email';
 import COLOR from '@styles/colors';
 import { useRouter } from 'next/router';
 
@@ -93,7 +94,9 @@ const FeedAccordion = ({
             <EditIcon />
             수정하기
           </MenuItem>
+
           <Divider sx={{ margin: 0 }} />
+
           <MenuItem
             onClick={() => {
               handleClose();
@@ -117,7 +120,9 @@ const FeedAccordion = ({
             <AccountBoxRoundedIcon />
             프로필 보기
           </MenuItem>
+
           <Divider sx={{ margin: 0 }} />
+
           <MenuItem
             onClick={() => {
               handleClose();
@@ -127,6 +132,18 @@ const FeedAccordion = ({
           >
             <CommentRoundedIcon />
             댓글 달기
+          </MenuItem>
+
+          <Divider sx={{ margin: 0 }} />
+
+          <MenuItem
+            onClick={() => {
+              handleClose();
+            }}
+            disableRipple
+          >
+            <EmailIcon />
+            메시지 보내기
           </MenuItem>
         </ul>
       )}
